@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>四六级写作真题分析 · 通用模板 · 高分句式（2021-2025）</title>
+<style>
+:root {
+  --brand-color: #11b981;
+  --brand-dark: #067647;
+  --brand-soft: #ecfdf3;
+  --brand-border: #b7e4cd;
+  --text-strong: #101828;
+  --text-normal: #344054;
+  --text-muted: #667085;
+  --line-soft: #e7eaee;
+  --card-bg: #f8fffb;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #f6f7f1; color: var(--text-normal); line-height: 1.8; }
+.container { max-width: 800px; margin: 0 auto; padding: 0 16px; }
+
+/* 封面 */
+.cover { max-width: 800px; margin: 16px auto 24px; color: #fff; background: radial-gradient(circle at 86% 12%, rgba(17, 185, 129, 0.22), transparent 28%), linear-gradient(135deg, #101828 0%, #12372b 100%); padding: 38px 24px 34px; text-align: center; border: 1px solid rgba(16, 24, 40, 0.12); border-radius: 24px; box-shadow: 0 14px 34px rgba(16, 24, 40, 0.16); }
+.cover .badge { display: inline-block; background: rgba(17, 185, 129, 0.13); border: 1px solid rgba(17, 185, 129, 0.26); color: var(--brand-color); border-radius: 20px; padding: 4px 16px; font-size: 13px; font-weight: 700; margin-bottom: 16px; letter-spacing: 2px; }
+.cover h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+.cover .subtitle { font-size: 15px; color: rgba(255, 255, 255, 0.68); margin-bottom: 24px; }
+.cover .stats { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+.cover .stat-item { text-align: center; }
+.cover .stat-item .num { font-size: 28px; font-weight: 800; color: var(--brand-color); display: block; line-height: 1; }
+.cover .stat-item .label { font-size: 12px; color: rgba(255, 255, 255, 0.62); margin-top: 4px; }
+.cover .update { display: inline-block; font-size: 12px; color: rgba(255, 255, 255, 0.72); background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 999px; padding: 4px 12px; margin-top: 20px; }
+
+/* 内容区 */
+.section { background: #fff; border: 1px solid var(--line-soft); border-radius: 18px; padding: 28px 24px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06); }
+.section h2 { font-size: 20px; color: var(--text-strong); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--line-soft); display: flex; align-items: center; gap: 8px; }
+.section h2 .icon { font-size: 22px; }
+.section h3 { font-size: 17px; color: var(--brand-color); margin: 20px 0 10px; }
+.section h4 { font-size: 15px; color: var(--brand-color); margin: 14px 0 8px; }
+
+/* 表格 */
+table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 14px; }
+th { background: var(--brand-soft); color: var(--brand-color); font-weight: 600; padding: 10px 8px; text-align: left; font-size: 13px; white-space: nowrap; }
+td { padding: 8px; border-bottom: 1px solid var(--line-soft); vertical-align: top; font-size: 13px; line-height: 1.6; }
+tr:hover td { background: #f3faf6; }
+th:first-child, td:first-child { padding-left: 12px; }
+th:last-child, td:last-child { padding-right: 12px; }
+
+.highlight { background: #f3faf6; border-left: 3px solid var(--brand-color); padding: 12px 16px; margin: 14px 0; border-radius: 0 8px 8px 0; font-size: 14px; }
+.highlight.blue { background: var(--brand-soft); border-left-color: var(--brand-color); }
+.highlight.green { background: var(--brand-soft); border-left-color: var(--brand-dark); }
+
+/* 模板卡片 */
+.template-card { background: var(--card-bg); border: 1px solid var(--line-soft); border-radius: 14px; padding: 20px; margin: 16px 0; }
+.template-card .tag { display: inline-block; background: var(--brand-color); color: #fff; padding: 3px 12px; border-radius: 12px; font-size: 12px; margin-bottom: 10px; }
+.template-card .scope { font-size: 13px; color: #666; margin-bottom: 12px; }
+.template-card pre { background: #f7fcf9; color: var(--text-normal); border: 1px solid var(--brand-border); padding: 16px 20px; border-radius: 14px; overflow-x: auto; font-size: 14px; line-height: 1.9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; white-space: pre-wrap; }
+.template-card .tips { margin-top: 12px; font-size: 13px; color: #555; }
+
+/* 句式卡片 */
+.sentence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+.sentence-card { background: var(--card-bg); border: 1px solid var(--line-soft); border-radius: 8px; padding: 12px; }
+.sentence-card .func { font-size: 11px; color: #888; margin-bottom: 4px; }
+.sentence-card .en { font-size: 14px; color: var(--brand-color); font-weight: 500; margin-bottom: 4px; }
+.sentence-card .cn { font-size: 12px; color: #777; }
+
+/* 对比卡片 */
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+.compare-card { background: var(--card-bg); border-radius: 10px; padding: 20px; border: 1px solid var(--line-soft); }
+.compare-card.blue { border-top: 3px solid var(--brand-color); }
+.compare-card.green { border-top: 3px solid var(--brand-dark); }
+.compare-card h4 { color: var(--text-strong); margin-bottom: 10px; font-size: 16px; }
+
+/* 陷阱列表 */
+.trap-list { list-style: none; }
+.trap-list li { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; align-items: flex-start; }
+.trap-list li:last-child { border-bottom: none; }
+.trap-list .trap { color: #c0392b; font-weight: 600; min-width: 80px; }
+.trap-list .fix { color: var(--brand-color); }
+
+/* 关键词替换表 */
+.replace-table td:first-child { color: #c0392b; font-weight: 500; }
+.replace-table td:nth-child(2) { color: var(--brand-dark); font-weight: 500; }
+
+/* 预测 */
+.prediction-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 14px 0; }
+.prediction-item { background: var(--card-bg); border: 1px solid var(--line-soft); border-radius: 8px; padding: 14px; text-align: center; }
+.prediction-item .topic { font-weight: 600; color: var(--brand-color); font-size: 14px; }
+.prediction-item .model { font-size: 11px; color: #888; margin-top: 4px; }
+
+/* 响应式 */
+@media (max-width: 640px) {
+  .cover { padding: 32px 16px; }
+  .cover h1 { font-size: 22px; }
+  .cover .stats { gap: 16px; }
+  .cover .stat-item .num { font-size: 22px; }
+  .section { padding: 20px 16px; }
+  .sentence-grid { grid-template-columns: 1fr; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .prediction-grid { grid-template-columns: 1fr 1fr; }
+  table { font-size: 12px; }
+  th, td { padding: 6px 4px; font-size: 12px; }
+}
+
+.footer { text-align: center; padding: 32px 16px; color: #999; font-size: 12px; }
+.footer a { color: var(--brand-color); }
+</style>
+</head>
+<body>
+
+<!-- 封面 -->
+<div class="cover">
+  <div class="badge">近五年真题分析 · 2021 — 2025</div>
+  <h1>四六级写作真题分析<br>通用模板 × 高分句式</h1>
+  <div class="subtitle">基于 60 套真题提炼 · 11 种通用模板 · 40+ 高分替换句</div>
+  <div class="stats">
+    <div class="stat-item"><span class="num">60</span><span class="label">套真题支撑</span></div>
+    <div class="stat-item"><span class="num">11</span><span class="label">套通用模板</span></div>
+    <div class="stat-item"><span class="num">40+</span><span class="label">高分替换句式</span></div>
+  </div>
+  <div class="update">整理于 2026 年 6 月 · 猴哥星球学习资料</div>
+</div>
+
+<div class="container">
+
+<!-- 一、四级写作真题汇总 -->
+<div class="section">
+  <h2><span class="icon">📋</span> 一、四级写作真题汇总（10 考次 · 30 套）</h2>
+  <table>
+    <tr><th>考次</th><th>套一</th><th>套二</th><th>套三</th><th>题型</th></tr>
+    <tr><td>2021.06</td><td>科技使人上瘾</td><td>暴力游戏导致暴力行为</td><td>科技让人变懒</td><td>议论文·社会现象</td></tr>
+    <tr><td>2021.12</td><td>演讲比赛计划书</td><td>迎新项目计划书</td><td>旧书回收项目报告</td><td>应用文</td></tr>
+    <tr><td>2022.06</td><td>给医务室提建议</td><td>给图书馆提建议</td><td>同套二</td><td>应用文·建议书</td></tr>
+    <tr><td>2022.09</td><td>山区支教申请</td><td>邀请校友分享经验</td><td>教师节活动建议</td><td>应用文</td></tr>
+    <tr><td>2022.12</td><td>体育锻炼与学业</td><td>健康生活方式</td><td>社交技能培养</td><td>议论文·校园</td></tr>
+    <tr><td>2023.03</td><td>职业规划研讨会汇报</td><td>推荐一本书</td><td>专家讲座报道</td><td>应用文</td></tr>
+    <tr><td>2023.06</td><td>网络教学优缺点</td><td>与同学保持友好关系</td><td>社区服务及其益处</td><td>议论文</td></tr>
+    <tr><td>2023.12</td><td>印象最深的校园事件</td><td>家乡的最新发展</td><td>大学印象最深的事</td><td>记叙+议论</td></tr>
+    <tr><td>2024.06</td><td>图书馆向公众开放？</td><td>体育设施向公众开放？</td><td>食堂向公众开放？</td><td>议论文·校园</td></tr>
+    <tr><td>2024.12</td><td>绿色校园</td><td>中国传统文化</td><td>快递服务业发展</td><td>议论文</td></tr>
+    <tr><td>2025.06</td><td>大学语文必修课</td><td>正确使用 AI 工具</td><td>跨文化能力培养</td><td>议论文·教育+科技</td></tr>
+    <tr><td>2025.12</td><td>学生会丰富学生生活</td><td>学术写作必修课</td><td>利用校园资源促学术</td><td>议论文·建议类</td></tr>
+  </table>
+
+  <div class="highlight blue">
+    <strong>📌 四级命题规律：</strong><br>
+    ① 题型三大类：议论文（60%）> 应用文（30%）> 记叙议论结合（10%）<br>
+    ② 话题三大来源：校园生活（50%）> 社会热点（30%）> 个人成长（20%）<br>
+    ③ <strong>近年趋势：</strong>2024-2025 明显回归「议论文 + 教育/社会话题」，应用文占比下降<br>
+    ④ 稳定特征：120-180 词，30 分钟，每次 3 套题同属一个大类
+  </div>
+</div>
+
+<!-- 二、六级写作真题汇总 -->
+<div class="section">
+  <h2><span class="icon">📋</span> 二、六级写作真题汇总（10 考次 · 30 套）</h2>
+  <table>
+    <tr><th>考次</th><th>套一</th><th>套二</th><th>套三</th><th>题型</th></tr>
+    <tr><td>2021.06</td><td>高等教育发展（图表）</td><td>城市化进程（图表）</td><td>脱贫攻坚（图表）</td><td>图表作文</td></tr>
+    <tr><td>2021.12</td><td>追星现象</td><td>网络虚假信息</td><td>父母过度保护</td><td>议论文·社会现象</td></tr>
+    <tr><td>2022.06</td><td>终身学习新技能</td><td>环保生活方式</td><td>助人为乐</td><td>议论文</td></tr>
+    <tr><td>2022.12</td><td>团队精神</td><td>批判性思维</td><td>信息技术与教育</td><td>议论文·能力素养</td></tr>
+    <tr><td>2023.06</td><td>心理健康</td><td>友好讨论与沟通</td><td>教育的目标</td><td>议论文·个人发展</td></tr>
+    <tr><td>2023.12</td><td>老年人的社会价值</td><td>数字化时代的素养</td><td>社会责任意识</td><td>议论文·社会议题</td></tr>
+    <tr><td>2024.06</td><td>扎实基础的重要性</td><td>儿童学习自由</td><td>终身学习习惯</td><td>议论文·教育</td></tr>
+    <tr><td>2024.12</td><td>自律与个人成长</td><td>大学提供探索机会</td><td>设定目标坚持不懈</td><td>议论文·成长</td></tr>
+    <tr><td>2025.06</td><td>AI 过度依赖危害创造力</td><td>负责任使用社交媒体</td><td>职业准备与规划</td><td>议论文·科技+社会</td></tr>
+    <tr><td>2025.12</td><td>中国梦与青年责任</td><td>高校教师对学生影响</td><td>大学生就业准备</td><td>议论文·家国+教育</td></tr>
+  </table>
+
+  <div class="highlight green">
+    <strong>📌 六级命题规律：</strong><br>
+    ① 题型单一：90% 以上为议论文，约 70% 给定首句，仅 2021.06 为图表作文<br>
+    ② 三大主题域：社会现象（40%）> 个人发展（35%）> 科技与教育（25%）<br>
+    ③ 话题深度高：涉及社会评论、价值观讨论、教育思辨<br>
+    ④ 150-200 词，30 分钟
+  </div>
+</div>
+
+<!-- 三、四六级对比 -->
+<div class="section">
+  <h2><span class="icon">⚖️</span> 三、四级 vs 六级 — 核心差异</h2>
+  <table>
+    <tr><th>维度</th><th>四级</th><th>六级</th></tr>
+    <tr><td>字数</td><td>120-180 词</td><td>150-200 词</td></tr>
+    <tr><td>题型</td><td>议论文 + 应用文 + 记叙</td><td>几乎全是议论文</td></tr>
+    <tr><td>话题深度</td><td>校园、日常生活</td><td>社会现象、价值观讨论</td></tr>
+    <tr><td>语言要求</td><td>表达清晰即可</td><td>需要逻辑论证 + 例证</td></tr>
+    <tr><td>给定条件</td><td>较少给定首句</td><td>约 70% 给定首句</td></tr>
+    <tr><td>评分重点</td><td>切题 + 通顺</td><td>切题 + 论证 + 语言质量</td></tr>
+  </table>
+</div>
+
+<!-- 四、四级通用模板 -->
+<div class="section">
+  <h2><span class="icon">📝</span> 四、四级通用写作模板（5 大类型）</h2>
+
+  <!-- 模板 1 -->
+  <div class="template-card">
+    <div class="tag">模板 1</div> <strong>利弊分析型</strong>（最常用，占总题量约 40%）
+    <div class="scope">适用：科技话题、设施开放讨论、AI 工具使用等</div>
+    <pre>【首段 — 引入话题】
+In recent years, the issue of ______ has aroused wide public concern.
+People hold different opinions on this matter.
+
+【中段 — 分析利弊】
+On the one hand, there are some advantages of ______.
+First of all, ... Moreover, ... What's more, ...
+
+On the other hand, we should not ignore its disadvantages.
+To begin with, ... Besides, ... Finally, ...
+
+【尾段 — 个人观点】
+As far as I am concerned, ______ is more beneficial than harmful.
+What we need to do is to make full use of its advantages while
+avoiding its negative effects. Only in this way can we truly
+benefit from it.</pre>
+    <div class="tips">💡 <strong>高分替换词：</strong><code>important</code>→<code>significant/essential/vital</code> | <code>more and more</code>→<code>an increasing number of</code> | <code>I think</code>→<code>From my perspective</code></div>
+  </div>
+
+  <!-- 模板 2 -->
+  <div class="template-card">
+    <div class="tag">模板 2</div> <strong>建议/方案型</strong>
+    <div class="scope">适用：书信建议、活动计划、改进方案</div>
+    <pre>【首段 — 背景 + 目的】
+I am writing to put forward some suggestions concerning ______.
+As a ______, I have observed some issues that deserve our attention.
+
+【中段 — 具体建议】
+In the first place, I suggest that we should ______.
+The reason is that ______.
+In the second place, it would be beneficial if we could ______.
+By doing so, we can ______.
+Last but not least, ______ is also of great importance.
+
+【尾段 — 期待与总结】
+I sincerely hope that my suggestions will be taken into
+consideration. With joint efforts, I am convinced that
+______ can be solved effectively.</pre>
+  </div>
+
+  <!-- 模板 3 -->
+  <div class="template-card">
+    <div class="tag">模板 3</div> <strong>重要性论述型</strong>
+    <div class="scope">适用：健康、社交技能、大学语文、跨文化能力等</div>
+    <pre>【首段 — 点明重要性】
+It is universally acknowledged that ______ plays an
+indispensable role in ______. Without it, we would
+find it difficult to ______.
+
+【中段 — 论证重要性】
+There are several reasons to account for its importance.
+First and foremost, ______. For example, ______.
+Furthermore, ______. A case in point is ______.
+Additionally, ______. Statistics show that ______.
+
+【尾段 — 总结 + 呼吁】
+To sum up, the significance of ______ can never be
+overemphasized. It is high time that we attached great
+importance to ______ and took concrete actions to ______.</pre>
+  </div>
+
+  <!-- 模板 4 -->
+  <div class="template-card">
+    <div class="tag">模板 4</div> <strong>记叙 + 感受型</strong>
+    <div class="scope">适用：校园事件回忆、家乡发展、讲座汇报</div>
+    <pre>【首段 — 引出事件】
+When it comes to ______, what comes to my mind
+first is ______. It happened ______, and it left
+a deep impression on me.
+
+【中段 — 描述 + 感受】
+At that time, ______. What impressed me most was ______.
+I can still vividly remember that ______.
+This experience has taught me a valuable lesson: ______.
+Moreover, I came to realize that ______.
+
+【尾段 — 总结意义】
+Looking back, I feel ______. It not only ______
+but also ______. I will always cherish this memory.</pre>
+  </div>
+
+  <!-- 模板 5 -->
+  <div class="template-card">
+    <div class="tag">模板 5</div> <strong>现象评论型</strong>（万能备用）
+    <div class="scope">适用：大部分开放式话题</div>
+    <pre>【首段 — 现象描述】
+Nowadays, there is a growing concern over ______.
+This phenomenon has become increasingly common.
+
+【中段 — 原因/影响分析】
+Several factors contribute to this trend.
+To begin with, ______. In addition, ______.
+As a result, it has exerted profound effects on ______.
+On the positive side, ______. However, it may
+also lead to ______.
+
+【尾段 — 个人看法】
+From where I stand, ______. We should adopt a
+rational attitude and take effective measures.</pre>
+  </div>
+</div>
+
+<!-- 五、六级通用模板 -->
+<div class="section">
+  <h2><span class="icon">📝</span> 五、六级通用写作模板（4 大类型）</h2>
+
+  <div class="template-card">
+    <div class="tag">模板 1</div> <strong>给定首句论证型</strong>（六级最常见，占 70%+）
+    <div class="scope">适用：绝大多数六级题目 — 自律、目标、AI、社交媒体等</div>
+    <pre>【给定首句】______.
+
+【承接 — 展开论述】
+This statement reminds us that ______. In today's
+society, this issue deserves our serious consideration.
+
+【中段一 — 观点 1 + 例证】
+First and foremost, ______. To put it more specifically,
+______. For instance, ______. This example clearly
+illustrates that ______.
+
+【中段二 — 观点 2 + 分析】
+Furthermore, ______. A recent survey indicates that
+______. If we fail to ______, we may ______.
+Therefore, it is of great necessity that we ______.
+
+【尾段 — 总结升华】
+In conclusion, ______. Only when we ______ can we
+______. The future belongs to those who ______.</pre>
+    <div class="tips">💡 <strong>关键词替换：</strong><code>important</code>→<code>of paramount importance/indispensable</code> | <code>we should</code>→<code>it is imperative that we (should)</code> | <code>lead to</code>→<code>give rise to/contribute to</code></div>
+  </div>
+
+  <div class="template-card">
+    <div class="tag">模板 2</div> <strong>图表作文型</strong>（近年仅 2021.06 考过，但需警惕回归）
+    <div class="scope">适用：柱状图/折线图描述 + 原因分析 + 趋势预测</div>
+    <pre>【首段 — 描述图表】
+As is vividly demonstrated in the chart, ______ has
+experienced a dramatic change over the past ______.
+The figure increased/decreased from ______ to ______.
+
+【中段 — 分析原因】
+What accounts for this remarkable change? From my point
+of view, there are at least three contributing factors.
+To begin with, ______. Moreover, ______.
+Last but not least, ______.
+
+【尾段 — 预测/评论】
+Based on the analysis above, we can safely predict that
+this trend will continue in the foreseeable future.</pre>
+    <div class="tips">💡 <strong>图表描述词：</strong>上升→<code>increase/rise/climb/soar</code> | 下降→<code>decrease/decline/drop/plunge</code> | 急剧地→<code>dramatically/sharply</code> | 逐渐地→<code>gradually/steadily</code></div>
+  </div>
+
+  <div class="template-card">
+    <div class="tag">模板 3</div> <strong>社会现象评论型</strong>
+    <div class="scope">适用：追星、虚假信息、环保、助人为乐等</div>
+    <pre>【首段 — 现象引入】
+There is no denying that ______ has become a heated
+topic in contemporary society. People's views on this
+issue vary from person to person.
+
+【中段 — 现象分析 + 我的看法】
+Primarily, ______. In the second place, ______.
+As for me, ______. On the one hand, ______.
+On the other hand, ______.
+
+【尾段 — 解决方案】
+To address this issue, joint efforts are required.
+The government should ______. Meanwhile, individuals
+ought to ______. Only through collective actions
+can we ______.</pre>
+  </div>
+
+  <div class="template-card">
+    <div class="tag">模板 4</div> <strong>个人素养/能力培养型</strong>
+    <div class="scope">适用：终身学习、团队精神、批判思维、自律、目标设定</div>
+    <pre>【首段 — 引入能力主题】
+In the modern era, ______ has been regarded as one
+of the most essential qualities for ______.
+
+【中段 — 论证重要性】
+From a personal perspective, ______. For instance, ______.
+From a social perspective, ______. Studies show that ______.
+How can we cultivate this quality?
+First, ______. Second, ______. Third, ______.
+
+【尾段 — 总结】
+To sum up, ______ is not only a personal asset but
+also a social need. It is high time we realized its
+importance and took practical steps to develop it.</pre>
+  </div>
+</div>
+
+<!-- 六、万能高分句式 -->
+<div class="section">
+  <h2><span class="icon">✨</span> 六、万能高分句式（四六级通用）</h2>
+
+  <h3>开头万能句</h3>
+  <table>
+    <tr><th>场景</th><th>句式</th></tr>
+    <tr><td>引入话题</td><td>There is a growing concern over...</td></tr>
+    <tr><td>引入话题</td><td>It is universally acknowledged that...</td></tr>
+    <tr><td>引入话题</td><td>With the rapid development of society, ...has become increasingly important.</td></tr>
+    <tr><td>引出争议</td><td>People's views on...vary from person to person.</td></tr>
+    <tr><td>引出争议</td><td>When it comes to..., opinions differ greatly.</td></tr>
+  </table>
+
+  <h3>中间论证句</h3>
+  <table>
+    <tr><th>功能</th><th>句式</th></tr>
+    <tr><td>列第一点</td><td>First and foremost, ...</td></tr>
+    <tr><td>列第二点</td><td>Furthermore / Moreover / In addition, ...</td></tr>
+    <tr><td>列最后一点</td><td>Last but not least, ...</td></tr>
+    <tr><td>举例</td><td>A case in point is... / For instance, ...</td></tr>
+    <tr><td>转折</td><td>However / Nevertheless / On the contrary, ...</td></tr>
+    <tr><td>对比</td><td>On the one hand... On the other hand...</td></tr>
+    <tr><td>因果</td><td>As a result / Consequently / Therefore, ...</td></tr>
+    <tr><td>强调</td><td>It is worth noting that... / There is no doubt that...</td></tr>
+  </table>
+
+  <h3>结尾万能句</h3>
+  <table>
+    <tr><th>功能</th><th>句式</th></tr>
+    <tr><td>总结</td><td>To sum up / In conclusion / All in all, ...</td></tr>
+    <tr><td>个人观点</td><td>From my perspective / As far as I am concerned, ...</td></tr>
+    <tr><td>呼吁行动</td><td>It is high time that we took effective measures to...</td></tr>
+    <tr><td>展望未来</td><td>Only in this way can we embrace a brighter future.</td></tr>
+    <tr><td>强调意义</td><td>The significance of...can never be overemphasized.</td></tr>
+  </table>
+
+  <h3>过渡衔接词</h3>
+  <table>
+    <tr><th>功能</th><th>词汇</th></tr>
+    <tr><td>递进</td><td>moreover / furthermore / additionally / what's more</td></tr>
+    <tr><td>转折</td><td>however / nevertheless / on the contrary / whereas</td></tr>
+    <tr><td>因果</td><td>therefore / consequently / accordingly / hence</td></tr>
+    <tr><td>举例</td><td>for instance / namely / such as / to illustrate</td></tr>
+    <tr><td>总结</td><td>in conclusion / to summarize / in brief / overall</td></tr>
+    <tr><td>强调</td><td>indeed / undoubtedly / there is no denying that</td></tr>
+  </table>
+
+  <h3>高分替换词速查表</h3>
+  <table class="replace-table">
+    <tr><th>普通表达</th><th>高分表达</th></tr>
+    <tr><td>important</td><td>significant / essential / vital / crucial / indispensable</td></tr>
+    <tr><td>more and more</td><td>an increasing number of / a growing number of</td></tr>
+    <tr><td>I think</td><td>From my perspective / As far as I am concerned / It is my conviction that</td></tr>
+    <tr><td>good</td><td>beneficial / favorable / advantageous / rewarding</td></tr>
+    <tr><td>bad</td><td>harmful / detrimental / adverse / unfavorable</td></tr>
+    <tr><td>many</td><td>numerous / a multitude of / a host of / a vast array of</td></tr>
+    <tr><td>because</td><td>due to the fact that / on the grounds that / owing to</td></tr>
+    <tr><td>we should</td><td>it is imperative that we (should) / it is advisable that we</td></tr>
+    <tr><td>solve</td><td>address / tackle / cope with / resolve</td></tr>
+    <tr><td>lead to</td><td>give rise to / contribute to / result in</td></tr>
+    <tr><td>very</td><td>exceedingly / remarkably / extraordinarily</td></tr>
+    <tr><td>show</td><td>demonstrate / illustrate / indicate / reveal</td></tr>
+    <tr><td>different</td><td>diverse / various / a variety of</td></tr>
+    <tr><td>big</td><td>substantial / considerable / enormous</td></tr>
+  </table>
+</div>
+
+<!-- 七、常见陷阱 -->
+<div class="section">
+  <h2><span class="icon">⚠️</span> 七、四六级写作常见陷阱与对策</h2>
+  <ul class="trap-list">
+    <li><span class="trap">跑题</span><span class="fix">审题 3 分钟，圈出关键词，确定文体和角度再动笔</span></li>
+    <li><span class="trap">字数不够</span><span class="fix">四级写满 150 词，六级写满 180 词。举例和解释能自然扩句</span></li>
+    <li><span class="trap">语法错误</span><span class="fix">不确定的复杂句宁可用简单句。主谓一致、时态一致必须检查</span></li>
+    <li><span class="trap">模板痕迹重</span><span class="fix">模板是骨架，具体内容用自己的话填充，避免整段生搬硬套</span></li>
+    <li><span class="trap">没有例子</span><span class="fix">每个论点配一个例子 — 可以是数据、故事、假设情景</span></li>
+    <li><span class="trap">虎头蛇尾</span><span class="fix">结尾至少写 2-3 句，不要一句话匆匆结束</span></li>
+    <li><span class="trap">中式英语</span><span class="fix">多背地道表达，避免逐字翻译。不确定时用简单结构</span></li>
+    <li><span class="trap">卷面潦草</span><span class="fix">字迹清晰 + 段落分明 + 少涂改，印象分很重要</span></li>
+  </ul>
+</div>
+
+<!-- 八、2026 预测 -->
+<div class="section">
+  <h2><span class="icon">🔮</span> 八、2026 年四六级写作话题预测</h2>
+
+  <h3>四级预测（6 大方向）</h3>
+  <table>
+    <tr><th>方向</th><th>可能话题</th><th>参考模板</th></tr>
+    <tr><td>科技伦理</td><td>AI 辅助学习的边界</td><td>利弊分析型</td></tr>
+    <tr><td>校园生活</td><td>如何提高课堂参与度</td><td>建议/方案型</td></tr>
+    <tr><td>心理健康</td><td>大学生减压方式</td><td>重要性论述型</td></tr>
+    <tr><td>传统文化</td><td>传统节日进校园</td><td>重要性论述型</td></tr>
+    <tr><td>社会现象</td><td>短视频对学习的影响</td><td>现象评论型</td></tr>
+    <tr><td>环保</td><td>校园垃圾分类</td><td>建议/方案型</td></tr>
+  </table>
+
+  <h3>六级预测（6 大方向）</h3>
+  <table>
+    <tr><th>方向</th><th>可能话题</th><th>参考模板</th></tr>
+    <tr><td>AI 伦理</td><td>人机协作的未来</td><td>给定首句论证型</td></tr>
+    <tr><td>文化自信</td><td>讲好中国故事</td><td>给定首句论证型</td></tr>
+    <tr><td>社会责任</td><td>年轻人参与社区治理</td><td>社会现象评论型</td></tr>
+    <tr><td>职业发展</td><td>终身学习的必要性</td><td>个人素养型</td></tr>
+    <tr><td>心理健康</td><td>竞争压力下的自我调适</td><td>个人素养型</td></tr>
+    <tr><td>教育改革</td><td>大学教育如何适应 AI 时代</td><td>给定首句论证型</td></tr>
+  </table>
+
+  <div class="highlight">
+    <strong>💡 使用建议：</strong><br>
+    模板是框架，不是全部。拿到题目后 → 确定类型 → 套对应模板结构 → 用自己的词汇和例句填充内容。<br>
+    考前至少用每种模板练习 <strong>2 篇完整作文</strong>，确保在考场上能快速激活。
+  </div>
+</div>
+
+</div>
+
+<div class="footer">
+  <p>基于 2021-2025 年共 60 套四六级写作真题整理分析</p>
+  <p style="margin-top:8px;">仅供学习参考，请勿用于商业用途</p>
+</div>
+
+</body>
+</html>

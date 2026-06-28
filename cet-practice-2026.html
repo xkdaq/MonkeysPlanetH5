@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>四六级翻译模拟题18套 · 2026预测版</title>
+<style>
+:root {
+  --brand-color: #11b981;
+  --brand-dark: #067647;
+  --brand-soft: #ecfdf3;
+  --brand-border: #b7e4cd;
+  --text-strong: #101828;
+  --text-normal: #344054;
+  --text-muted: #667085;
+  --line-soft: #e7eaee;
+  --card-bg: #f8fffb;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f6f7f1;
+  color: var(--text-normal);
+  line-height: 1.8;
+}
+.container { max-width: 800px; margin: 0 auto; padding: 20px 16px 60px; }
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 40px 0 24px;
+}
+.header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-strong);
+  margin-bottom: 8px;
+}
+.header .subtitle {
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.stat-item {
+  text-align: center;
+}
+.stat-item .num {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--brand-color);
+  display: block;
+  line-height: 1.2;
+}
+.stat-item .label {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 0;
+  margin: 32px 0 0;
+  border-bottom: 2px solid var(--line-soft);
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px 0;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color .2s;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+.tab-btn.active {
+  color: var(--brand-color);
+  border-bottom-color: var(--brand-color);
+}
+.tab-btn:hover { color: var(--brand-color); }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Card */
+.card {
+  background: #fff;
+  border: 1px solid var(--line-soft);
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, .06);
+  margin: 20px 0;
+  overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, var(--brand-color) 0%, var(--brand-dark) 100%);
+  color: #fff;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.card-header .card-num {
+  font-size: 13px;
+  font-weight: 500;
+  background: rgba(255,255,255,.2);
+  padding: 2px 10px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+.card-header .card-title {
+  font-size: 17px;
+  font-weight: 600;
+}
+.card-body { padding: 20px; }
+
+/* Chinese text */
+.chinese-text {
+  background: var(--card-bg);
+  border-left: 3px solid var(--brand-color);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  font-size: 15px;
+  line-height: 2;
+  color: var(--text-normal);
+  text-align: justify;
+  border-radius: 10px;
+}
+
+/* Toggle answer */
+.toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid var(--brand-border);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: var(--brand-color);
+  cursor: pointer;
+  transition: all .2s;
+  margin-bottom: 12px;
+  background: #fff;
+}
+.toggle-btn:hover { background: var(--brand-soft); border-color: var(--brand-color); color: var(--brand-color); }
+.toggle-btn .arrow {
+  display: inline-block;
+  transition: transform .3s;
+}
+.toggle-btn.open .arrow { transform: rotate(180deg); }
+
+.answer-panel {
+  display: none;
+  background: #f7fcf9;
+  border: 1px solid var(--brand-border);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--text-normal);
+}
+.answer-panel.open { display: block; }
+
+/* Tips table */
+.tips-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 13px;
+}
+.tips-table th {
+  background: var(--brand-soft);
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--brand-color);
+  border-bottom: 1px solid var(--brand-border);
+}
+.tips-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--text-normal);
+}
+.tips-table tr:last-child td { border-bottom: none; }
+
+/* Universal sentences */
+.sentence-block {
+  background: #fff;
+  border: 1px solid var(--line-soft);
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, .06);
+  padding: 20px;
+  margin: 20px 0;
+}
+.sentence-block h3 {
+  font-size: 17px;
+  color: var(--brand-color);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.sentence-item {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+.sentence-item .cn { color: var(--text-normal); margin-bottom: 4px; }
+.sentence-item .en { color: var(--text-muted); font-size: 13px; }
+
+/* Comparison table */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 20px 0;
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, .06);
+}
+.compare-table th {
+  background: var(--brand-color);
+  color: #fff;
+  padding: 10px 14px;
+  text-align: center;
+  font-weight: 600;
+}
+.compare-table td {
+  padding: 10px 14px;
+  text-align: center;
+  border-bottom: 1px solid var(--line-soft);
+}
+.compare-table tr:nth-child(even) td { background: var(--card-bg); }
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 32px 16px 20px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .header h1 { font-size: 22px; }
+  .stats { gap: 20px; }
+  .stat-item .num { font-size: 28px; }
+  .card-body { padding: 14px; }
+  .chinese-text { padding: 12px 14px; font-size: 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="header">
+  <h1>四六级翻译模拟题 · 18套</h1>
+  <div class="subtitle">2026年预测版 · 基于近十年真题规律</div>
+  <div class="stats">
+    <div class="stat-item"><span class="num">18</span><span class="label">套模拟题</span></div>
+    <div class="stat-item"><span class="num">60</span><span class="label">套真题支撑</span></div>
+    <div class="stat-item"><span class="num">180+</span><span class="label">核心翻译要点</span></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('cet4', this)">四级 · 9套</button>
+  <button class="tab-btn" onclick="switchTab('cet6', this)">六级 · 9套</button>
+  <button class="tab-btn" onclick="switchTab('general', this)">通用资料</button>
+</div>
+
+<!-- ============ CET4 Tab ============ -->
+<div class="tab-content active" id="tab-cet4">
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET4 #1</span><span class="card-title">中国瓷器</span></div>
+  <div class="card-body">
+    <div class="chinese-text">中国瓷器历史悠久，可追溯到三千多年前。"瓷器"的英文单词就来源于中国地名，足见其地位。景德镇位于江西省，是中国最重要的瓷器产地，被誉为"瓷都"。景德镇瓷器以造型精美、色彩丰富著称，其白瓷更是远近驰名。数百年来，景德镇瓷器通过丝绸之路和海上贸易远销海外，成为传播中国文化的重要使者。如今，景德镇依然是世界陶瓷艺术的重要中心，每年吸引大批游客。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">Chinese porcelain has a long history dating back more than 3,000 years. The very word for "porcelain" in English derives from China's name, which speaks volumes about its standing. Located in Jiangxi Province, Jingdezhen is China's most important porcelain-producing area and is known as the "Porcelain Capital." Jingdezhen porcelain is celebrated for its exquisite forms and rich colors, with its white porcelain being particularly famous. For hundreds of years, Jingdezhen porcelain has been exported overseas via the Silk Road and maritime trade, serving as an important ambassador of Chinese culture. Today, Jingdezhen remains a major center of ceramic art in the world, attracting large numbers of visitors each year.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>可追溯到</td><td>dating back to</td><td>固定搭配</td></tr>
+      <tr><td>足见其地位</td><td>speaks volumes about its standing</td><td>speak volumes 说明很多</td></tr>
+      <tr><td>瓷都</td><td>"Porcelain Capital"</td><td>大写，带引号</td></tr>
+      <tr><td>造型精美、色彩丰富</td><td>exquisite forms and rich colors</td><td>名词并列</td></tr>
+      <tr><td>远销海外</td><td>exported overseas</td><td>export 出口</td></tr>
+      <tr><td>重要使者</td><td>important ambassador</td><td>ambassador 使者</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET4 #2</span><span class="card-title">中医文化</span></div>
+  <div class="card-body">
+    <div class="chinese-text">中医是中国传统医学的重要组成部分，有着数千年的悠久历史。中医认为人体是一个有机整体，人与自然环境密不可分。中医的诊断方法主要包括望、闻、问、切四种方式。中医使用中草药、针灸、推拿等多种治疗手段，副作用小、疗效稳定。近年来，随着中医文化的推广，越来越多的国家开始接受中医疗法。目前，中医已在世界一百八十多个国家和地区得到应用。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">Traditional Chinese Medicine (TCM) is an important part of traditional Chinese medicine and has a long history of thousands of years. TCM holds that the human body is an organic whole and that people are closely connected with nature. The diagnostic methods of TCM mainly include four approaches: observation, listening and smelling, inquiry, and pulse-taking. TCM employs various treatment methods such as herbal medicine, acupuncture, and tuina massage, featuring minimal side effects and reliable efficacy. In recent years, with the promotion of TCM culture, more and more countries have begun to accept TCM therapies. Currently, TCM is applied in more than 180 countries and regions around the world.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>中医</td><td>Traditional Chinese Medicine (TCM)</td><td>首次用全称</td></tr>
+      <tr><td>有机整体</td><td>organic whole</td><td>organic 有机的</td></tr>
+      <tr><td>望闻问切</td><td>observation, listening and smelling, inquiry, pulse-taking</td><td>四字逐译</td></tr>
+      <tr><td>副作用小、疗效稳定</td><td>minimal side effects and reliable efficacy</td><td>专业描述</td></tr>
+      <tr><td>针灸</td><td>acupuncture</td><td>国际通用</td></tr>
+      <tr><td>一百八十多个</td><td>more than 180</td><td>数字表达</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET4 #3</span><span class="card-title">汉服文化</span></div>
+  <div class="card-body">
+    <div class="chinese-text">汉服是中国汉族的传统服饰，有着几千年的历史，是中华传统文化的重要载体。汉服款式多样，体现了古代中国人对礼仪和美的执着追求。汉服文化在明代达到鼎盛，清代以后逐渐衰落。进入21世纪，随着传统文化的热潮兴起，越来越多的年轻人选择在传统节日或日常生活中穿汉服。如今，汉服不仅是一种服饰，更成为年轻人表达文化认同的重要方式。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">Hanfu is the traditional clothing of the Han Chinese people, with a history of thousands of years, and is an important carrier of traditional Chinese culture. Hanfu comes in a wide variety of styles, reflecting ancient Chinese people's persistent pursuit of propriety and beauty. Hanfu culture reached its peak during the Ming Dynasty and gradually declined after the Qing Dynasty. Entering the 21st century, with the rise of enthusiasm for traditional culture, more and more young people choose to wear Hanfu during traditional festivals or in daily life. Today, Hanfu has become not only a form of clothing but also an important way for young people to express their cultural identity.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>汉服</td><td>Hanfu</td><td>保留拼音</td></tr>
+      <tr><td>传统服饰</td><td>traditional clothing</td><td>clothing 服饰</td></tr>
+      <tr><td>款式多样</td><td>wide variety of styles</td><td>variety 多样</td></tr>
+      <tr><td>达到鼎盛</td><td>reached its peak</td><td>peak 顶峰</td></tr>
+      <tr><td>逐渐衰落</td><td>gradually declined</td><td>decline 衰落</td></tr>
+      <tr><td>文化认同</td><td>cultural identity</td><td>identity 认同</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET4 #4</span><span class="card-title">刺绣艺术</span></div>
+  <div class="card-body">
+    <div class="chinese-text">中国刺绣历史悠久，至少有一千多年的历史，是中国传统手工艺的重要代表。中国有四大名绣：苏绣、湘绣、粤绣和蜀绣，各具特色。苏绣以精细雅洁著称，湘绣以写实传神见长，粤绣色彩浓郁、构图饱满，蜀绣则以细腻严谨独树一帜。丝绸是刺绣的主要材料，而中国正是丝绸的发源地。如今，中国刺绣已成为重要的文化出口产品，受到世界各地人们的喜爱。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">Chinese embroidery has a long history of at least 1,000 years and is an important representative of traditional Chinese handicrafts. China has four famous embroidery styles: Suzhou embroidery, Hunan embroidery, Guangdong embroidery, and Sichuan embroidery, each with its own unique features. Suzhou embroidery is known for its delicacy and elegance, Hunan embroidery excels at realistic and vivid expression, Guangdong embroidery features rich colors and full compositions, while Sichuan embroidery stands apart for its refinement and rigor. Silk is the primary material for embroidery, and China is precisely the birthplace of silk. Today, Chinese embroidery has become an important cultural export product, loved by people around the world.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>刺绣</td><td>embroidery</td><td>不可数名词</td></tr>
+      <tr><td>四大名绣</td><td>four famous embroidery styles</td><td>style 风格</td></tr>
+      <tr><td>以……著称</td><td>be known for</td><td>固定搭配</td></tr>
+      <tr><td>写实传神</td><td>realistic and vivid</td><td>两词并列</td></tr>
+      <tr><td>独树一帜</td><td>stands apart</td><td>习惯用语</td></tr>
+      <tr><td>发源地</td><td>birthplace</td><td>名词使用</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET4 #5</span><span class="card-title">皮影戏</span></div>
+  <div class="card-body">
+    <div class="chinese-text">皮影戏是中国一种古老的传统艺术形式，至今已有两千多年历史，被誉为中国的"第五大发明"。表演时，艺人在白色幕布后方，用灯光将彩色人偶的影子投射到幕布上，同时配以音乐和演唱，讲述各种民间故事。皮影戏流传于全国各地，其中以陕西和甘肃的皮影最具代表性。2011年，皮影戏被列入联合国非物质文化遗产名录，得到了全世界的广泛认可。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">Shadow puppetry is an ancient traditional art form in China with a history of over 2,000 years, hailed as China's "fifth great invention." During a performance, the artist stands behind a white screen and uses a light source to project the shadows of colorful puppets onto the screen, accompanied by music and singing to tell various folk tales. Shadow puppetry is found throughout the country, with the shadow puppet traditions of Shaanxi and Gansu provinces being among the most representative. In 2011, shadow puppetry was inscribed on the UNESCO Intangible Cultural Heritage List, gaining recognition from all over the world.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>皮影戏</td><td>Shadow puppetry</td><td>官方译名</td></tr>
+      <tr><td>第五大发明</td><td>"fifth great invention"</td><td>带引号</td></tr>
+      <tr><td>幕布</td><td>screen</td><td>屏幕/幕布</td></tr>
+      <tr><td>人偶</td><td>puppets</td><td>puppet 木偶/人偶</td></tr>
+      <tr><td>投射到</td><td>project … onto</td><td>project 投射</td></tr>
+      <tr><td>非物质文化遗产</td><td>Intangible Cultural Heritage</td><td>官方全称</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET4 #6</span><span class="card-title">京剧艺术</span></div>
+  <div class="card-body">
+    <div class="chinese-text">京剧是中国最具代表性的传统戏曲艺术，被誉为"国粹"，已有两百多年的悠久历史。京剧融合了唱、念、做、打四种表演形式。京剧脸谱是表演的重要组成部分，不同颜色代表不同的人物性格：红色代表忠勇，白色代表奸诈，黑色代表刚正。京剧的角色分为生、旦、净、丑，各有其独特的表演风格。作为非物质文化遗产，京剧每年在全球各地上演，吸引着无数观众。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">Peking Opera is the most representative form of traditional Chinese opera art and is hailed as the "national essence" of Chinese culture, with a history of more than 200 years. Peking Opera integrates four forms of performance: singing, recitation, acting, and acrobatics. The facial masks of Peking Opera are an essential part of the performance, with different colors representing different character traits: red symbolizes loyalty and bravery, white represents treachery, and black stands for integrity. The roles in Peking Opera are divided into sheng, dan, jing, and chou, each with its own unique performance style. As an Intangible Cultural Heritage, Peking Opera is performed around the world every year, attracting countless audiences.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>京剧</td><td>Peking Opera</td><td>标准译名</td></tr>
+      <tr><td>国粹</td><td>"national essence"</td><td>带引号</td></tr>
+      <tr><td>唱念做打</td><td>singing, recitation, acting, acrobatics</td><td>四词逐译</td></tr>
+      <tr><td>脸谱</td><td>facial masks</td><td>mask 面具/脸谱</td></tr>
+      <tr><td>忠勇/奸诈/刚正</td><td>loyalty &amp; bravery / treachery / integrity</td><td>词义精准</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET4 #7</span><span class="card-title">中国航天</span></div>
+  <div class="card-body">
+    <div class="chinese-text">中国航天事业自1956年起步，经过几十年的艰苦奋斗，取得了举世瞩目的成就。2003年，杨利伟乘坐神舟五号飞船成功进入太空，中国成为第三个独立掌握载人航天技术的国家。此后，中国相继完成了太空行走、交会对接等关键任务。2021年，天宫空间站正式开工建设，标志着中国航天进入了全新阶段。中国航天的成就充分展示了中国的科技实力和探索精神。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">China's space program began in 1956 and, after decades of hard work and perseverance, has achieved remarkable accomplishments that have captured the world's attention. In 2003, Yang Liwei successfully entered space aboard the Shenzhou-5 spacecraft, making China the third country in the world to independently master crewed spaceflight technology. Since then, China has successively completed key missions such as spacewalking and rendezvous and docking. In 2021, the Tiangong Space Station officially began construction, marking a brand new phase in China's space exploration. China's space achievements fully demonstrate the country's scientific strength and spirit of exploration.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>举世瞩目</td><td>captured the world's attention</td><td>惯用搭配</td></tr>
+      <tr><td>神舟五号</td><td>Shenzhou-5 spacecraft</td><td>官方译名</td></tr>
+      <tr><td>载人航天</td><td>crewed spaceflight</td><td>crewed 载人</td></tr>
+      <tr><td>交会对接</td><td>rendezvous and docking</td><td>航天术语</td></tr>
+      <tr><td>天宫空间站</td><td>Tiangong Space Station</td><td>官方译名</td></tr>
+      <tr><td>探索精神</td><td>spirit of exploration</td><td>exploration 探索</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET4 #8</span><span class="card-title">乡村振兴</span></div>
+  <div class="card-body">
+    <div class="chinese-text">乡村振兴战略是中国政府为推动农村全面发展而提出的重要战略。近年来，随着乡村振兴政策的深入推进，中国农村发生了巨大变化。农村道路、电力和通信网络不断改善，农民的生活水平显著提高。农村电商快速发展，许多农民通过网络销售农产品，收入大幅增加。特色农业和乡村旅游也在农村蓬勃兴起，为农民带来了更多的收入来源和发展机会。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">The rural revitalization strategy is an important strategy proposed by the Chinese government to promote the comprehensive development of rural areas. In recent years, with the deepening implementation of rural revitalization policies, enormous changes have taken place in China's rural areas. Rural roads, electricity, and communication networks have continuously improved, and farmers' living standards have risen significantly. Rural e-commerce has developed rapidly, with many farmers selling agricultural products online, leading to a substantial increase in income. Specialty agriculture and rural tourism have also flourished in rural areas, bringing farmers more income sources and development opportunities.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>乡村振兴战略</td><td>rural revitalization strategy</td><td>官方译名</td></tr>
+      <tr><td>巨大变化</td><td>enormous changes</td><td>enormous 巨大的</td></tr>
+      <tr><td>通信网络</td><td>communication networks</td><td>communication 通信</td></tr>
+      <tr><td>生活水平</td><td>living standards</td><td>standard 标准</td></tr>
+      <tr><td>农产品</td><td>agricultural products</td><td>agricultural 农业的</td></tr>
+      <tr><td>收入来源</td><td>income sources</td><td>income 收入</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET4 #9</span><span class="card-title">中国高铁</span></div>
+  <div class="card-body">
+    <div class="chinese-text">中国高速铁路是世界上规模最大的高铁网络，运营里程超过四万公里。中国高铁的发展始于2008年，当年北京至天津的高铁线路正式开通运营。短短十余年间，高铁已连接中国大多数省份，大大缩短了城市间的旅行时间。复兴号动车组是中国自主研发的高铁列车，代表着世界先进的高铁技术。高铁不仅改变了中国人的出行方式，也有力推动了沿线地区的经济发展。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">China's high-speed rail network is the largest in the world, with an operational mileage of over 40,000 kilometers. The development of China's high-speed rail began in 2008, when the high-speed rail line between Beijing and Tianjin was officially put into operation. In just over a decade, high-speed rail has connected most provinces in China, greatly shortening travel time between cities. The Fuxing EMU is a high-speed train independently developed by China and represents the world's advanced high-speed rail technology. High-speed rail has not only changed how Chinese people travel but also powerfully promoted economic development in regions along the lines.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>高速铁路</td><td>high-speed rail</td><td>固定译法</td></tr>
+      <tr><td>运营里程</td><td>operational mileage</td><td>mileage 里程</td></tr>
+      <tr><td>自主研发</td><td>independently developed</td><td>independent 独立的</td></tr>
+      <tr><td>出行方式</td><td>how people travel</td><td>灵活表达</td></tr>
+      <tr><td>沿线地区</td><td>regions along the lines</td><td>along 沿着</td></tr>
+      <tr><td>经济发展</td><td>economic development</td><td>固定搭配</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<!-- ============ CET6 Tab ============ -->
+<div class="tab-content" id="tab-cet6">
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET6 #1</span><span class="card-title">中医药文化</span></div>
+  <div class="card-body">
+    <div class="chinese-text">中医药是中华民族在长期实践中创造的独特医学体系，已有数千年的悠久历史。中医药以整体观念和辨证论治为核心，将人体视为与自然环境相协调的有机整体。中医认为疾病的发生与阴阳失衡、气血失调有关，治疗的目标在于恢复人体的内在平衡。中药典籍《本草纲目》由明代医学家李时珍历时二十七年编撰完成，收录了近两千种药物，被达尔文誉为"中国古代的百科全书"。迄今，中医药已传播到世界一百八十多个国家和地区，惠及数亿人口。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">Traditional Chinese Medicine (TCM) is a unique medical system created by the Chinese nation through long-term practice, with a long history of thousands of years. TCM is centered on the concepts of holism and syndrome differentiation and treatment, viewing the human body as an organic whole that exists in harmony with the natural environment. TCM holds that disease is related to the imbalance of yin and yang and the disharmony of qi and blood, and that the goal of treatment is to restore the body's internal balance. The classic TCM text Compendium of Materia Medica (Bencao Gangmu) was compiled by Li Shizhen, a physician of the Ming Dynasty, over a period of 27 years, covering nearly 2,000 types of medicinal substances. It has been praised by Charles Darwin as "the ancient Chinese encyclopedia." To date, TCM has spread to more than 180 countries and regions worldwide, benefiting hundreds of millions of people.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>中医药</td><td>Traditional Chinese Medicine (TCM)</td><td>首次出现用全称</td></tr>
+      <tr><td>辨证论治</td><td>syndrome differentiation and treatment</td><td>中医核心术语</td></tr>
+      <tr><td>阴阳失衡</td><td>imbalance of yin and yang</td><td>yin/yang 直接借用</td></tr>
+      <tr><td>气血失调</td><td>disharmony of qi and blood</td><td>qi 直接借用</td></tr>
+      <tr><td>本草纲目</td><td>Compendium of Materia Medica (Bencao Gangmu)</td><td>官方译名+拼音</td></tr>
+      <tr><td>达尔文</td><td>Charles Darwin</td><td>人名有固定拼写</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET6 #2</span><span class="card-title">针灸疗法</span></div>
+  <div class="card-body">
+    <div class="chinese-text">针灸是中医最具代表性的治疗方法之一，由针刺和艾灸两种疗法组成。针灸通过刺激人体特定的穴位，调节经络中气的运行，从而达到防病治病的目的。经络是连接人体各器官和组织的不可见通道，人体共有三百六十多个标准穴位，每个穴位都有其特定的功能。世界卫生组织认可针灸可用于治疗一百余种病症。目前，全球已有一百八十多个国家和地区应用针灸疗法，从业人员超过三十万人。2010年，针灸被列入联合国非物质文化遗产名录，获得了全球性的认可。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">Acupuncture and moxibustion is one of the most representative treatment methods in TCM, comprising two therapies: acupuncture and moxibustion. By stimulating specific acupoints on the human body, acupuncture and moxibustion regulates the flow of qi through the meridians, thereby achieving the purpose of disease prevention and treatment. Meridians are invisible channels connecting the various organs and tissues of the human body, and there are more than 360 standard acupoints in the body, each with its own specific function. The World Health Organization recognizes acupuncture as applicable to the treatment of more than 100 conditions. Currently, acupuncture is practiced in more than 180 countries and regions worldwide, with a practitioner base of over 300,000 people. In 2010, acupuncture and moxibustion was inscribed on the UNESCO Intangible Cultural Heritage List, gaining global recognition.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>针灸</td><td>acupuncture and moxibustion</td><td>专业全称</td></tr>
+      <tr><td>穴位</td><td>acupoints</td><td>专业术语</td></tr>
+      <tr><td>经络</td><td>meridians</td><td>专业术语</td></tr>
+      <tr><td>气的运行</td><td>flow of qi</td><td>qi 直接借用</td></tr>
+      <tr><td>世界卫生组织</td><td>World Health Organization</td><td>官方名称</td></tr>
+      <tr><td>非物质文化遗产</td><td>Intangible Cultural Heritage</td><td>官方译法</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET6 #3</span><span class="card-title">李时珍与《本草纲目》</span></div>
+  <div class="card-body">
+    <div class="chinese-text">李时珍是明代著名医药学家，生于1518年，被后人尊称为"药圣"。他自幼随父学医，立志编撰一部全面系统的药学典籍，以纠正古代本草书中的诸多错误。为此，他不畏艰辛，走遍湖北、江西、广东等地，亲自采集药物标本，向农民、渔夫、猎人等各类人群虚心求教。历经二十七年潜心研究，他终于完成了这部划时代的巨著。《本草纲目》共五十二卷，收录药物近两千种，附插图一千一百幅，记录药方一万一千余个。该书出版后迅速流传至日本、朝鲜及欧洲各国，对世界医药学的发展产生了深远影响。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">Li Shizhen was a renowned physician and pharmacologist of the Ming Dynasty, born in 1518. He has been revered by later generations as the "Saint of Medicine." He studied medicine under his father from childhood and resolved to compile a comprehensive and systematic pharmacological classic to correct numerous errors found in ancient herbal texts. To this end, undaunted by hardship, he traveled extensively through Hubei, Jiangxi, Guangdong, and other provinces, personally collecting medicinal specimens and humbly consulting farmers, fishermen, hunters, and people from all walks of life. After 27 years of dedicated research, he finally completed this epoch-making monumental work. The Compendium of Materia Medica consists of 52 volumes, covering nearly 2,000 medicinal substances, accompanied by 1,100 illustrations and recording more than 11,000 prescriptions. After its publication, the book rapidly spread to Japan, Korea, and European countries, exerting a profound influence on the development of world medicine.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>药圣</td><td>"Saint of Medicine"</td><td>大写+引号</td></tr>
+      <tr><td>全面系统的药学典籍</td><td>comprehensive and systematic pharmacological classic</td><td>pharmacological 药理学的</td></tr>
+      <tr><td>各类人群</td><td>people from all walks of life</td><td>固定搭配</td></tr>
+      <tr><td>五十二卷</td><td>52 volumes</td><td>volumes 卷</td></tr>
+      <tr><td>药方</td><td>prescriptions</td><td>prescription 处方</td></tr>
+      <tr><td>深远影响</td><td>profound influence</td><td>profound 深远的</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET6 #4</span><span class="card-title">京剧艺术</span></div>
+  <div class="card-body">
+    <div class="chinese-text">京剧是中国的传统戏曲艺术，由徽班进京后融合昆曲、汉调等多种剧种发展而成，已有约两百年的历史。清朝中叶以后，京剧逐渐成为最具影响力的全国性剧种，被誉为"国粹"。京剧表演融合了唱、念、做、打四种形式，以其独特的脸谱和精美的服装闻名于世。京剧脸谱是中国传统文化的独特符号，不同颜色传递不同的人物性格。京剧的角色分为生、旦、净、丑，各有其独特的表演规范和艺术风格。作为非物质文化遗产，京剧是中国文化走向世界的重要名片。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">Peking Opera is a traditional Chinese opera art that developed from the integration of Anhui opera troupes with various styles such as Kunqu opera and Han opera, with a history of approximately 200 years. From the mid-Qing Dynasty onwards, Peking Opera gradually became the most influential national opera form and was hailed as the "national essence" of Chinese culture. Peking Opera integrates four forms—singing, recitation, acting, and acrobatics—and is world-renowned for its distinctive painted facial masks and exquisite costumes. The facial masks of Peking Opera are a unique symbol of traditional Chinese culture, with different colors conveying different character traits. The roles in Peking Opera are divided into sheng, dan, jing, and chou, each with its own unique performance conventions and artistic style. As an Intangible Cultural Heritage, Peking Opera serves as an important calling card for Chinese culture on the world stage.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>徽班进京</td><td>Anhui opera troupes</td><td>历史典故简化</td></tr>
+      <tr><td>国粹</td><td>"national essence"</td><td>带引号</td></tr>
+      <tr><td>唱念做打</td><td>singing, recitation, acting, acrobatics</td><td>四字逐译</td></tr>
+      <tr><td>脸谱</td><td>painted facial masks</td><td>描述性译法</td></tr>
+      <tr><td>生旦净丑</td><td>sheng, dan, jing, chou</td><td>保留拼音</td></tr>
+      <tr><td>文化名片</td><td>calling card</td><td>惯用搭配</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET6 #5</span><span class="card-title">古琴文化</span></div>
+  <div class="card-body">
+    <div class="chinese-text">古琴是中国最古老的拨弦乐器之一，历史超过三千年，在中国传统文化中具有极其崇高的地位。古琴形制古朴，通常有七根弦，音色深沉含蓄。在中国古代，古琴不仅是一件乐器，更是文人雅士修身养性、表达情志的重要工具。儒家将"琴棋书画"列为君子必修的四艺，古琴位居首位。中国古代许多名篇都与古琴有关，如"高山流水"描述了俞伯牙与钟子期之间惺惺相惜的知音之情。唐代诗人王维、宋代文学家苏轼都是古琴的忠实爱好者。2003年，古琴被联合国教科文组织列为人类非物质文化遗产。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">The guqin is one of China's oldest plucked string instruments, with a history of over 3,000 years, and holds an extremely lofty status in traditional Chinese culture. The guqin has a simple and classical form, typically with seven strings, and is known for its deep and understated timbre. In ancient China, the guqin was not merely a musical instrument but an important means for scholars and intellectuals to cultivate their character and express their feelings. Confucianism listed the "four arts of the scholar"—qin (guqin), qi (chess), shu (calligraphy), and hua (painting)—as essential accomplishments of the cultured gentleman, with the guqin placed first. Many famous works in ancient Chinese literature are associated with the guqin, such as "High Mountains and Flowing Waters," which depicts the soulmate bond between Yu Boya and Zhong Ziqi. Both the Tang Dynasty poet Wang Wei and the Song Dynasty writer Su Shi were devoted enthusiasts of the guqin. In 2003, the guqin was inscribed by UNESCO as an Intangible Cultural Heritage of Humanity.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>古琴</td><td>guqin</td><td>保留拼音</td></tr>
+      <tr><td>拨弦乐器</td><td>plucked string instrument</td><td>乐器分类术语</td></tr>
+      <tr><td>音色</td><td>timbre</td><td>专业术语</td></tr>
+      <tr><td>修身养性</td><td>cultivate their character</td><td>cultivate 修身</td></tr>
+      <tr><td>琴棋书画</td><td>four arts of the scholar</td><td>解释性翻译</td></tr>
+      <tr><td>高山流水</td><td>"High Mountains and Flowing Waters"</td><td>直译+引号</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET6 #6</span><span class="card-title">苏州园林</span></div>
+  <div class="card-body">
+    <div class="chinese-text">苏州园林是中国传统园林艺术的杰出代表，主要分布于江苏省苏州市，现存园林九十余处。苏州园林以其精巧的布局、丰富的意境和深厚的文化底蕴著称于世，被誉为"咫尺之内造乾坤"。苏州园林善用借景、框景等造园手法，通过巧妙设计，使有限的空间呈现出丰富的景观层次。拙政园是苏州最大的私家园林，始建于明朝，面积约为五万二千平方米，以水景见长，其亭台楼阁与山水花木巧妙搭配，步移景异。1997年，拙政园等九座苏州园林被列入世界文化遗产名录。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">Suzhou gardens are an outstanding representative of traditional Chinese garden art, mainly distributed across Suzhou, Jiangsu Province, with more than 90 gardens surviving today. Suzhou gardens are world-renowned for their ingenious layout, rich artistic conception, and profound cultural heritage, earning the praise of "creating a universe within a tiny space." Suzhou gardens make skillful use of techniques such as borrowed scenery and framed views, presenting rich layers of landscape within a limited space through clever design. The Humble Administrator's Garden (Zhuozhengyuan) is the largest private garden in Suzhou. Built during the Ming Dynasty, it covers an area of approximately 52,000 square meters and is particularly noted for its water scenery, with pavilions, terraces, and towers artfully arranged alongside hills, water, and vegetation so that the view changes with every step. In 1997, nine Suzhou gardens, including the Humble Administrator's Garden, were inscribed on the World Cultural Heritage List.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>意境</td><td>artistic conception</td><td>核心美学概念</td></tr>
+      <tr><td>咫尺之内造乾坤</td><td>creating a universe within a tiny space</td><td>意译保留意象</td></tr>
+      <tr><td>借景/框景</td><td>borrowed scenery / framed views</td><td>造园术语</td></tr>
+      <tr><td>拙政园</td><td>Humble Administrator's Garden</td><td>官方译名</td></tr>
+      <tr><td>以水景见长</td><td>noted for its water scenery</td><td>noted for 以……著称</td></tr>
+      <tr><td>世界文化遗产</td><td>World Cultural Heritage</td><td>注意不含 Intangible</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET6 #7</span><span class="card-title">人工智能与数字经济</span></div>
+  <div class="card-body">
+    <div class="chinese-text">人工智能是引领新一轮科技革命和产业变革的战略性技术，正深刻改变着人类的生产方式和生活方式。中国高度重视人工智能的发展，已将其列为国家发展战略的重要组成部分。近年来，中国在自然语言处理、计算机视觉、语音识别等领域取得了重大突破，涌现出一批具有全球影响力的AI企业。2025年初，大语言模型DeepSeek发布，以低成本、高性能的特点引发全球广泛关注，被视为中国AI领域的重要突破。与此同时，中国数字经济规模持续扩大，电商直播、跨境电商等新业态不断涌现。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">Artificial intelligence (AI) is a strategic technology leading a new round of technological revolution and industrial transformation, profoundly changing the way people produce and live. China attaches great importance to the development of AI and has incorporated it as an important part of its national development strategy. In recent years, China has achieved major breakthroughs in AI fields such as natural language processing, computer vision, and speech recognition, giving rise to a number of AI enterprises with global influence. In early 2025, the large language model DeepSeek was released, attracting widespread global attention for its low cost and high performance, and has been regarded as an important breakthrough in China's AI field. Meanwhile, China's digital economy has continued to expand in scale, with new business forms such as e-commerce live-streaming and cross-border e-commerce continuously emerging.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>人工智能</td><td>Artificial intelligence (AI)</td><td>首次用全称</td></tr>
+      <tr><td>战略性技术</td><td>strategic technology</td><td>官方表达</td></tr>
+      <tr><td>自然语言处理</td><td>natural language processing</td><td>NLP 专业术语</td></tr>
+      <tr><td>大语言模型</td><td>large language model</td><td>行业术语</td></tr>
+      <tr><td>跨境电商</td><td>cross-border e-commerce</td><td>电商术语</td></tr>
+      <tr><td>新业态</td><td>new business forms</td><td>政策术语</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET6 #8</span><span class="card-title">中国高铁</span></div>
+  <div class="card-body">
+    <div class="chinese-text">中国高速铁路经历了从引进消化吸收到自主创新的跨越式发展。2008年，中国第一条设计时速三百五十公里的高铁线路——京津城际铁路正式通车运营。短短十余年间，中国高铁运营里程从零起步，增长至超过四万公里，占全球高铁总里程约三分之二。中国自主研发的复兴号动车组，最高运营时速可达三百五十公里，代表了当今世界领先的高铁技术水平。高铁的飞速发展打破了地理隔阂，大大缩短了城市间的旅行时间，也有力推动了沿线地区的经济腾飞。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">China's high-speed rail has undergone leap-forward development, evolving from the introduction and assimilation of foreign technology to independent innovation. In 2008, China's first high-speed rail line designed for a top speed of 350 kilometers per hour—the Beijing-Tianjin Intercity Railway—was officially put into operation. In just over a decade, China's operational high-speed rail mileage grew from zero to over 40,000 kilometers, accounting for approximately two-thirds of the world's total high-speed rail mileage. The Fuxing EMU, independently developed by China, can reach a maximum operating speed of 350 kilometers per hour and represents world-leading high-speed rail technology today. The rapid development of high-speed rail has broken down geographical barriers, greatly shortened travel time between cities, and has also powerfully promoted the economic takeoff of regions along the lines.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>跨越式发展</td><td>leap-forward development</td><td>leap-forward 跨越式</td></tr>
+      <tr><td>京津城际铁路</td><td>Beijing-Tianjin Intercity Railway</td><td>官方译名</td></tr>
+      <tr><td>运营里程</td><td>operational mileage</td><td>mileage 里程</td></tr>
+      <tr><td>复兴号</td><td>Fuxing EMU</td><td>EMU = Electric Multiple Unit</td></tr>
+      <tr><td>三分之二</td><td>two-thirds</td><td>分数表达</td></tr>
+      <tr><td>打破地理隔阂</td><td>broken down geographical barriers</td><td>barrier 障碍</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="card-num">CET6 #9</span><span class="card-title">乡村振兴</span></div>
+  <div class="card-body">
+    <div class="chinese-text">乡村振兴是中国全面建设社会主义现代化国家的重大战略。近年来，随着乡村振兴政策的深入推进，中国农村发生了翻天覆地的变化。农村基础设施显著改善，道路、电网、通信网络已基本覆盖所有行政村。农村电商蓬勃发展，越来越多的农民通过网络直播平台销售农产品，收入大幅提高。特色农业、生态旅游等新业态在农村不断涌现，有力推动了农村产业融合发展。中国已兑现承诺，成为全球唯一在规定时限内彻底消除绝对贫困的大型发展中国家。</div>
+    <button class="toggle-btn" onclick="toggleAnswer(this)"><span class="arrow">&#9660;</span> 查看参考译文</button>
+    <div class="answer-panel">Rural revitalization is a major strategy in China's comprehensive effort to build a modern socialist country. In recent years, with the deepening implementation of rural revitalization policies, earth-shattering changes have taken place in China's rural areas. Rural infrastructure has improved significantly, with roads, power grids, and communication networks now basically covering all administrative villages. Rural e-commerce has flourished, with more and more farmers selling agricultural products via live-streaming platforms, leading to a substantial increase in income. New business forms such as specialty agriculture and eco-tourism have continuously emerged in rural areas, effectively driving the integrated development of rural industries. China has fulfilled its commitment, becoming the only large developing country in the world to have completely eliminated absolute poverty within the stipulated timeframe.</div>
+    <table class="tips-table">
+      <tr><th>中文表达</th><th>参考译法</th><th>说明</th></tr>
+      <tr><td>乡村振兴</td><td>rural revitalization</td><td>官方译名</td></tr>
+      <tr><td>翻天覆地的变化</td><td>earth-shattering changes</td><td>习惯搭配</td></tr>
+      <tr><td>行政村</td><td>administrative villages</td><td>政治地理术语</td></tr>
+      <tr><td>网络直播平台</td><td>live-streaming platforms</td><td>live-streaming 直播</td></tr>
+      <tr><td>消除绝对贫困</td><td>eliminated absolute poverty</td><td>eliminate 消除</td></tr>
+      <tr><td>兑现承诺</td><td>fulfilled its commitment</td><td>fulfil a commitment 固定搭配</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<!-- ============ General Tab ============ -->
+<div class="tab-content" id="tab-general">
+
+<div class="sentence-block">
+  <h3>四级翻译万能句式（7条）</h3>
+  <div class="sentence-item">
+    <div class="cn">① X 是中国传统文化的重要组成部分。</div>
+    <div class="en">X is an important part of traditional Chinese culture.</div>
+  </div>
+  <div class="sentence-item">
+    <div class="cn">② X 有着……年的悠久历史。</div>
+    <div class="en">X has a long history of … years.</div>
+  </div>
+  <div class="sentence-item">
+    <div class="cn">③ 近年来，X 越来越受到人们的欢迎。</div>
+    <div class="en">In recent years, X has become increasingly popular.</div>
+  </div>
+  <div class="sentence-item">
+    <div class="cn">④ X 以……而闻名。</div>
+    <div class="en">X is famous/known for …</div>
+  </div>
+  <div class="sentence-item">
+    <div class="cn">⑤ X 不仅……，而且……</div>
+    <div class="en">X not only … but also …</div>
+  </div>
+  <div class="sentence-item">
+    <div class="cn">⑥ 目前，X 已在……得到广泛应用。</div>
+    <div class="en">Currently, X has been widely applied in …</div>
+  </div>
+  <div class="sentence-item">
+    <div class="cn">⑦ 随着……的发展，X……</div>
+    <div class="en">With the development of …, X …</div>
+  </div>
+</div>
+
+<div class="sentence-block">
+  <h3>六级翻译万能句式（8条）</h3>
+  <div class="sentence-item">
+    <div class="cn">① X 是中华民族在……方面的重要创造，已有逾 Y 年的历史。</div>
+    <div class="en">X is an important creation of the Chinese nation in the field of …, with a history of more than Y years.</div>
+  </div>
+  <div class="sentence-item">
+    <div class="cn">② X 以……为核心，强调……的整体协调。</div>
+    <div class="en">X is centered on …, emphasizing holistic coordination of …</div>
+  </div>
+  <div class="sentence-item">
+    <div class="cn">③ 近年来，X 在中国取得了显著发展，引起了全世界的广泛关注。</div>
+    <div class="en">In recent years, X has achieved remarkable development in China, attracting widespread global attention.</div>
+  </div>
+  <div class="sentence-item">
+    <div class="cn">④ 数据显示，X 已传播到 Y 个国家和地区，从业人员超过 Z 万人。</div>
+    <div class="en">Statistics show that X has spread to Y countries and regions, with over Z thousand practitioners.</div>
+  </div>
+  <div class="sentence-item">
+    <div class="cn">⑤ X 不仅具有……的功能，还承载着丰富的文化内涵。</div>
+    <div class="en">X not only has the function of … but also carries rich cultural meaning.</div>
+  </div>
+  <div class="sentence-item">
+    <div class="cn">⑥ 目前，X 已被列入联合国教科文组织非物质文化遗产名录，获得了全球认可。</div>
+    <div class="en">Currently, X has been inscribed on the UNESCO Intangible Cultural Heritage List, gaining global recognition.</div>
+  </div>
+  <div class="sentence-item">
+    <div class="cn">⑦ X 向世界展示了中国在……领域的智慧与贡献。</div>
+    <div class="en">X showcases to the world China's wisdom and contribution in the field of …</div>
+  </div>
+  <div class="sentence-item">
+    <div class="cn">⑧ 随着……的推进，X 将继续在……方面发挥重要作用。</div>
+    <div class="en">With the advancement of …, X will continue to play an important role in …</div>
+  </div>
+</div>
+
+<h3 style="color:#2c4a7c; margin: 28px 0 12px; font-size:17px;">四六级难度对比</h3>
+<table class="compare-table">
+  <tr><th>维度</th><th>四级</th><th>六级</th></tr>
+  <tr><td>字数</td><td>约150字</td><td>约200字</td></tr>
+  <tr><td>数字精确度</td><td>偶尔有数字</td><td>几乎每篇有精确数字</td></tr>
+  <tr><td>人名出现频率</td><td>极少</td><td>高频（需记标准译法）</td></tr>
+  <tr><td>话题深度</td><td>单一文化符号</td><td>领域级深度叙述</td></tr>
+  <tr><td>难词比例</td><td>低</td><td>中高</td></tr>
+  <tr><td>逻辑层次</td><td>简单并列</td><td>因果/对比/递进混合</td></tr>
+</table>
+
+<div class="footer">
+  <p>本资料为2026年四六级翻译模拟练习专用，话题基于历年真题规律预测，仅供参考。</p>
+</div>
+
+</div>
+
+</div>
+
+<script>
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleAnswer(btn) {
+  btn.classList.toggle('open');
+  const panel = btn.nextElementSibling;
+  panel.classList.toggle('open');
+}
+</script>
+
+</body>
+</html>

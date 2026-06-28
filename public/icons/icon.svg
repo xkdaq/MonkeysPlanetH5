@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="4åD™“">
+  <defs>
+    <linearGradient id="bg" x1="74" y1="42" x2="438" y2="470" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffb45f"/>
+      <stop offset="0.48" stop-color="#ff7a45"/>
+      <stop offset="1" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="86" y1="328" x2="426" y2="184" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff4d6"/>
+      <stop offset="1" stop-color="#ffd089"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <path d="M83 321c75 56 247 54 346-42" fill="none" stroke="url(#ring)" stroke-width="32" stroke-linecap="round" opacity=".92"/>
+  <circle cx="256" cy="251" r="139" fill="#7a4520"/>
+  <circle cx="153" cy="214" r="48" fill="#7a4520"/>
+  <circle cx="359" cy="214" r="48" fill="#7a4520"/>
+  <circle cx="153" cy="214" r="25" fill="#f7c486"/>
+  <circle cx="359" cy="214" r="25" fill="#f7c486"/>
+  <path d="M149 265c0-72 49-119 107-119s107 47 107 119c0 70-48 111-107 111s-107-41-107-111Z" fill="#f7c486"/>
+  <circle cx="215" cy="245" r="15" fill="#2b160d"/>
+  <circle cx="297" cy="245" r="15" fill="#2b160d"/>
+  <ellipse cx="256" cy="289" rx="41" ry="33" fill="#ffe0ac"/>
+  <circle cx="242" cy="283" r="6" fill="#7a4520"/>
+  <circle cx="270" cy="283" r="6" fill="#7a4520"/>
+  <path d="M228 316c15 18 41 18 56 0" fill="none" stroke="#7a4520" stroke-width="10" stroke-linecap="round"/>
+  <path d="M171 165c44-54 126-62 184-12" fill="none" stroke="#f7c486" stroke-width="16" stroke-linecap="round" opacity=".34"/>
+  <circle cx="391" cy="126" r="16" fill="#fff4d6" opacity=".9"/>
+  <circle cx="116" cy="376" r="10" fill="#fff4d6" opacity=".75"/>
+</svg>

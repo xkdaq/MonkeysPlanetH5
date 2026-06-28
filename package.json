@@ -1,0 +1,19 @@
+{
+  "name": "material-h5",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "latest",
+    "html2canvas": "^1.4.1",
+    "marked": "^18.0.4",
+    "vant": "latest",
+    "vite": "latest",
+    "vue": "latest"
+  }
+}

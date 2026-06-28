@@ -1,0 +1,22 @@
+{
+  "name": "猴哥星球资料库",
+  "short_name": "资料库",
+  "description": "猴哥星球资料库",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f6f7f1",
+  "theme_color": "#071d17",
+  "icons": [
+    {
+      "src": "icons/icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
