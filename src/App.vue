@@ -276,7 +276,24 @@
         </template>
 
         <template v-else-if="detailType === 'note' && noteDetail">
-          <article ref="noteDetailCard" class="note-detail-card">
+          <!-- 外部链接笔记：全屏内嵌网页，体验接近原生页面 -->
+          <div v-if="isExternalLinkNote" class="link-detail-full">
+            <div v-if="linkFrameLoading" class="link-frame-loading">
+              <van-loading>页面加载中...</van-loading>
+            </div>
+            <iframe
+              class="link-frame"
+              :src="noteDetail.linkUrl"
+              title="外部页面"
+              @load="linkFrameLoading = false"
+            ></iframe>
+            <button type="button" class="link-open-browser" @click="openExternalInBrowser">
+              浏览器打开 ›
+            </button>
+          </div>
+
+          <!-- 普通笔记详情 -->
+          <article v-else ref="noteDetailCard" class="note-detail-card">
             <div class="note-meta">
               <van-tag plain type="primary">{{ noteDetail.subjectName || noteSubjectLabel(noteDetail.subjectId) }}</van-tag>
               <van-tag plain>{{ noteDetail.categoryName || noteCategoryLabel(noteDetail.categoryId) }}</van-tag>
@@ -372,7 +389,7 @@
 
       <!-- 笔记画板触发按钮 -->
       <button
-        v-if="detailType === 'note' && noteDetail"
+        v-if="detailType === 'note' && noteDetail && !isExternalLinkNote"
         type="button"
         class="sketch-fab"
         :class="{ active: sketchEnabled }"
@@ -457,6 +474,7 @@ let noteReloadPending = false
 
 const detailLoading = ref(false)
 const detailType = ref('')
+const linkFrameLoading = ref(false)
 
 /* ========== 笔记画板状态 ========== */
 const sketchEnabled = ref(false)
@@ -561,6 +579,7 @@ const noteEmptyDescription = computed(() => (
 
 const safeMaterialContent = computed(() => sanitizeHtml(materialDetail.value?.content || ''))
 const safeNoteContent = computed(() => renderContent(noteDetail.value?.content || '', noteDetail.value?.contentType))
+const isExternalLinkNote = computed(() => noteDetail.value?.type === 1 && Boolean(noteDetail.value?.linkUrl))
 
 function moduleCountLabel(module) {
   const total = module === 'material' ? materialTotal.value : noteTotal.value
@@ -947,13 +966,20 @@ function openNoteDetail(item) {
       materialId: item.id,
       materialTitle: item.title
     })
-    window.location.href = item.linkUrl
+    // 外链笔记改为站内详情页 + 内嵌网页，列表数据作为兜底直接传入
+    openDetail(item.id, 'note', false, item)
     return
   }
   openDetail(item.id, 'note')
 }
 
-async function openDetail(id, type, replaceState = false) {
+function openExternalInBrowser() {
+  if (noteDetail.value?.linkUrl) {
+    window.open(noteDetail.value.linkUrl, '_blank', 'noopener')
+  }
+}
+
+async function openDetail(id, type, replaceState = false, seedData = null) {
   if (!isModuleVisible(type)) {
     activeModule.value = defaultModule.value
     return
@@ -965,8 +991,9 @@ async function openDetail(id, type, replaceState = false) {
   detailType.value = type
   activeModule.value = type
   materialDetail.value = null
-  noteDetail.value = null
-  detailLoading.value = true
+  noteDetail.value = seedData
+  linkFrameLoading.value = Boolean(seedData?.type === 1 && seedData?.linkUrl)
+  detailLoading.value = !seedData
   if (!replaceState) {
     window.history.pushState({ id, type }, '', `?type=${type}&id=${id}`)
   }
@@ -976,7 +1003,15 @@ async function openDetail(id, type, replaceState = false) {
       throw new Error(res.msg || '详情加载失败')
     }
     if (type === 'note') {
-      noteDetail.value = res.data
+      // 接口数据优先，列表兜底数据补齐缺失字段（如 linkUrl）
+      const hadDetail = Boolean(noteDetail.value)
+      noteDetail.value = seedData ? { ...seedData, ...res.data } : res.data
+      // 只有 iframe 尚未挂载时（无 seedData 的直达/刷新场景）才需要打开加载层；
+      // 若 iframe 已挂载（seedData 场景），加载状态完全由 @load 事件控制，
+      // 否则缓存命中时 iframe 先于接口完成加载，这里会把加载层重新置 true 导致卡死
+      if (!hadDetail && isExternalLinkNote.value) {
+        linkFrameLoading.value = true
+      }
       reportVisit({
         eventType: 'note_detail_view',
         materialId: noteDetail.value.id,

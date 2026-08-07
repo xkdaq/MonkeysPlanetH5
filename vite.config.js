@@ -12,12 +12,12 @@ export default defineConfig(({ mode }) => {
   return {
     base: './',
     plugins: [vue()],
+    // public/ 下的文件（含 public/html）会在构建时原样拷贝到 dist/
+    // 访问路径为：域名/html/xxx.html
     build: {
       rollupOptions: {
         input: {
-          main: resolve(projectRoot, 'index.html'),
-          cetPractice2026: resolve(projectRoot, 'cet-practice-2026.html'),
-          cetWriting2026: resolve(projectRoot, 'cet-writing-2026.html')
+          main: resolve(projectRoot, 'index.html')
         }
       }
     },
