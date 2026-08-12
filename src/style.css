@@ -1249,10 +1249,10 @@ body {
 
 .pc-donate-text {
   padding: 14px;
-  border: 1px solid rgba(16, 24, 40, 0.06);
+  border: 1px solid var(--brand-border);
   border-radius: 10px;
   text-align: left;
-  background: #fff;
+  background: linear-gradient(160deg, #ffffff 0%, var(--brand-soft) 100%);
 }
 
 .pc-donate-text p {
@@ -1271,12 +1271,13 @@ body {
 }
 
 .pc-donate-qrcode {
-  width: 200px;
+  display: block;
+  width: 240px;
   height: auto;
-  margin: 14px auto 8px;
-  border: 1px solid rgba(16, 24, 40, 0.08);
-  border-radius: 12px;
-  box-shadow: 0 10px 26px rgba(16, 24, 40, 0.08);
+  margin: 16px auto 10px;
+  border: 1px solid #f0e2c0;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(217, 164, 65, 0.18);
 }
 
 .pc-donate-hint {

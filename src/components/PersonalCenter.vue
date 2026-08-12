@@ -131,8 +131,8 @@
         <p>如果这些内容对你有帮助，欢迎<strong>自愿赞赏</strong>支持一下，金额随意，一份心意就好。</p>
         <p>所有赞赏所得都将用于服务器、域名、存储等<strong>网站日常运营开支</strong>，让这个资料库能长期稳定地运行下去，帮助更多备考的同学。</p>
       </div>
-      <img class="pc-donate-qrcode" :src="`${baseUrl}assets/wepay.jpg`" alt="微信收款码" />
-      <p class="pc-donate-hint">微信「扫一扫」或长按保存图片后扫码赞赏</p>
+      <img class="pc-donate-qrcode" :src="`${baseUrl}assets/zanshang.jpg`" alt="微信赞赏码" />
+      <p class="pc-donate-hint">微信「扫一扫」，或长按识别二维码，即可赞赏支持</p>
       <div class="pc-donate-notice">
         <p>说明：赞赏完全出于自愿，属于个人之间的感谢与支持，不构成任何商品或服务交易，也不承诺任何回报；赞赏前请确认系本人真实意愿。</p>
       </div>
