@@ -282,6 +282,15 @@
             :scrollable="false"
             :text="materialDetail.linkRemark"
           />
+
+          <button
+            class="fav-toggle"
+            :class="{ active: currentFav }"
+            type="button"
+            @click="toggleCurrentFav"
+          >
+            {{ currentFav ? '★ 已收藏' : '☆ 收藏本资料' }}
+          </button>
         </template>
 
         <template v-else-if="detailType === 'note' && noteDetail">
@@ -312,6 +321,15 @@
             <p v-if="noteDetail.summary" class="note-summary">{{ noteDetail.summary }}</p>
             <div v-if="safeNoteContent" class="content-text content-html note-content" v-html="safeNoteContent"></div>
             <van-empty v-else description="暂无笔记内容" />
+
+            <button
+              class="fav-toggle"
+              :class="{ active: currentFav }"
+              type="button"
+              @click="toggleCurrentFav"
+            >
+              {{ currentFav ? '★ 已收藏' : '☆ 收藏本笔记' }}
+            </button>
 
             <!-- 画板 Canvas -->
             <canvas
@@ -414,6 +432,10 @@
         </svg>
       </button>
     </main>
+
+    <!-- 个人中心悬浮入口（仅列表页展示） -->
+    <PersonalCenter v-if="!isDetail" @open="openFromCenter" />
+
     <footer class="site-footer">
       <button class="site-disclaimer-link" type="button" @click="showDisclaimer">
         免责声明
@@ -433,6 +455,8 @@ import { showConfirmDialog, showDialog, showFailToast, showSuccessToast } from '
 import { getMaterialCategories, getMaterialDetail, getMaterialList, getMaterialSubjects } from './api/material'
 import { getNoteCategories, getNoteDetail, getNoteList, getNoteSubjects } from './api/note'
 import { reportVisit } from './api/visit'
+import PersonalCenter from './components/PersonalCenter.vue'
+import { addHistory, isFavorite, toggleFavorite } from './utils/localStore'
 
 const siteConfig = {
   officialAccountName: import.meta.env.VITE_OFFICIAL_ACCOUNT_NAME || '猴哥考研',
@@ -484,6 +508,7 @@ let noteReloadPending = false
 const detailLoading = ref(false)
 const detailType = ref('')
 const linkFrameLoading = ref(false)
+const currentFav = ref(false)
 
 /* ========== 笔记画板状态 ========== */
 const sketchEnabled = ref(false)
@@ -1038,6 +1063,11 @@ async function openDetail(id, type, replaceState = false, seedData = null) {
         materialTitle: materialDetail.value.title
       })
     }
+    const loadedDetail = type === 'note' ? noteDetail.value : materialDetail.value
+    if (loadedDetail) {
+      addHistory({ id: loadedDetail.id, type, title: loadedDetail.title })
+      syncFavState()
+    }
   } catch (error) {
     showFailToast(error.message || '详情加载失败')
   } finally {
@@ -1050,10 +1080,33 @@ function backToList() {
   detailType.value = ''
   materialDetail.value = null
   noteDetail.value = null
+  currentFav.value = false
   sketchEnabled.value = false
   sketchActive.value = false
   window.removeEventListener('resize', handleSketchResize)
   window.history.pushState({}, '', `${window.location.pathname}?module=${module}`)
+}
+
+function openFromCenter({ id, type }) {
+  if (!isModuleVisible(type)) {
+    return
+  }
+  openDetail(id, type)
+}
+
+function syncFavState() {
+  const detail = detailType.value === 'material' ? materialDetail.value : noteDetail.value
+  currentFav.value = detail ? isFavorite(detailType.value, detail.id) : false
+}
+
+function toggleCurrentFav() {
+  const detail = detailType.value === 'material' ? materialDetail.value : noteDetail.value
+  if (!detail) {
+    return
+  }
+  const added = toggleFavorite({ id: detail.id, type: detailType.value, title: detail.title })
+  currentFav.value = added
+  showSuccessToast(added ? '已加入收藏' : '已取消收藏')
 }
 
 function codeLabel(code) {
