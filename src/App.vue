@@ -160,13 +160,22 @@
           <div class="note-filter-card">
             <div class="note-subject-row" role="tablist" aria-label="笔记科目">
               <button
-                v-for="(subject, index) in noteSubjects"
-                :key="subject.value || subject.label"
-                :class="{ active: activeSubjectIndex === index }"
+                :class="{ active: activeSubjectIndex === 0 }"
                 type="button"
                 role="tab"
-                :aria-selected="activeSubjectIndex === index"
-                @click="selectNoteSubject(index)"
+                :aria-selected="activeSubjectIndex === 0"
+                @click="selectNoteSubject(0)"
+              >
+                全部
+              </button>
+              <button
+                v-for="(subject, index) in noteSubjects"
+                :key="subject.value || subject.label"
+                :class="{ active: activeSubjectIndex === index + 1 }"
+                type="button"
+                role="tab"
+                :aria-selected="activeSubjectIndex === index + 1"
+                @click="selectNoteSubject(index + 1)"
               >
                 {{ subject.label }}
               </button>
@@ -558,9 +567,13 @@ const selectedMaterialCategory = computed(() => {
   return materialCategories.value[activeMaterialCategoryIndex.value - 1]?.value || ''
 })
 
-const selectedSubject = computed(() => (
-  noteSubjects.value[activeSubjectIndex.value]?.value || defaultNoteSubjects[0].value
-))
+// 科目 index 0 为「全部」，不限制 subjectId
+const selectedSubject = computed(() => {
+  if (activeSubjectIndex.value === 0) {
+    return ''
+  }
+  return noteSubjects.value[activeSubjectIndex.value - 1]?.value || ''
+})
 
 const selectedNoteCategory = computed(() => {
   if (activeNoteCategoryIndex.value === 0) {
