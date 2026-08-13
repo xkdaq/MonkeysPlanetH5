@@ -50,19 +50,6 @@
         <span class="pc-menu-arrow">›</span>
       </button>
 
-      <button type="button" class="pc-menu-item" @click="openList('favorites')">
-        <span class="pc-menu-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-          </svg>
-        </span>
-        <span class="pc-menu-text">
-          <strong>我的收藏</strong>
-          <em>{{ favorites.length ? `已收藏 ${favorites.length} 条内容` : '收藏的资料和笔记会放在这里' }}</em>
-        </span>
-        <span class="pc-menu-arrow">›</span>
-      </button>
-
       <button type="button" class="pc-menu-item" @click="openList('history')">
         <span class="pc-menu-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -118,7 +105,7 @@
         </span>
         <span class="pc-menu-text">
           <strong>清除本地数据</strong>
-          <em>清空收藏与浏览历史</em>
+          <em>清空本机保存的浏览历史</em>
         </span>
         <span class="pc-menu-arrow">›</span>
       </button>
@@ -179,7 +166,7 @@
       <p class="pc-feedback-tip">提交即代表你同意我们仅将该信息用于问题处理。</p>
     </div>
 
-    <!-- 收藏 / 历史列表 -->
+    <!-- 历史列表 -->
     <div v-else class="pc-list">
       <template v-if="currentList.length">
         <button
@@ -194,7 +181,7 @@
           <span class="pc-menu-arrow">›</span>
         </button>
       </template>
-      <van-empty v-else :description="view === 'favorites' ? '还没有收藏内容' : '暂无浏览记录'" />
+      <van-empty v-else description="暂无浏览记录" />
     </div>
   </van-popup>
 </template>
@@ -203,7 +190,7 @@
 import { computed, ref, watch } from 'vue'
 import { showConfirmDialog, showDialog, showFailToast, showSuccessToast } from 'vant'
 import { submitFeedback } from '../api/feedback'
-import { clearLocalData, getFavorites, getHistory } from '../utils/localStore'
+import { clearLocalData, getHistory } from '../utils/localStore'
 
 const emit = defineEmits(['open'])
 
@@ -213,7 +200,6 @@ const baseUrl = import.meta.env.BASE_URL
 
 const show = ref(false)
 const view = ref('menu')
-const favorites = ref([])
 const history = ref([])
 
 // 与后端 sys_feedback.feedback_type 枚举一致：1功能建议 2BUG反馈 3账号问题 4其他 5求资料 6链接失效
@@ -236,16 +222,13 @@ const panelTitle = computed(() => {
   if (view.value === 'donate') {
     return '支持本站'
   }
-  if (view.value === 'favorites') {
-    return '我的收藏'
-  }
   if (view.value === 'history') {
     return '浏览历史'
   }
   return '个人中心'
 })
 
-const currentList = computed(() => (view.value === 'favorites' ? favorites.value : history.value))
+const currentList = computed(() => history.value)
 
 watch(show, (visible) => {
   if (visible) {
@@ -254,7 +237,6 @@ watch(show, (visible) => {
 })
 
 function refreshLists() {
-  favorites.value = getFavorites()
   history.value = getHistory()
 }
 
@@ -323,7 +305,7 @@ function showAbout() {
 function confirmClear() {
   showConfirmDialog({
     title: '清除本地数据',
-    message: '将清空本机保存的收藏和浏览历史，操作不可恢复。',
+    message: '将清空本机保存的浏览历史记录，操作不可恢复。',
     confirmButtonText: '清除',
     confirmButtonColor: '#ee0a24',
     cancelButtonText: '取消'

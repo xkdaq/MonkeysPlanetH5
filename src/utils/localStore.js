@@ -1,4 +1,3 @@
-const FAV_KEY = 'mp_favorites'
 const HISTORY_KEY = 'mp_history'
 const HISTORY_MAX = 50
 
@@ -23,27 +22,6 @@ function sameItem(a, b) {
   return a.type === b.type && String(a.id) === String(b.id)
 }
 
-export function getFavorites() {
-  return readList(FAV_KEY)
-}
-
-export function isFavorite(type, id) {
-  return getFavorites().some((item) => sameItem(item, { type, id }))
-}
-
-export function toggleFavorite(item) {
-  const list = getFavorites()
-  const index = list.findIndex((entry) => sameItem(entry, item))
-  if (index >= 0) {
-    list.splice(index, 1)
-    writeList(FAV_KEY, list)
-    return false
-  }
-  list.unshift({ id: item.id, type: item.type, title: item.title, time: Date.now() })
-  writeList(FAV_KEY, list)
-  return true
-}
-
 export function getHistory() {
   return readList(HISTORY_KEY)
 }
@@ -60,7 +38,6 @@ export function addHistory(item) {
 
 export function clearLocalData() {
   try {
-    localStorage.removeItem(FAV_KEY)
     localStorage.removeItem(HISTORY_KEY)
   } catch (error) {
     // ignore

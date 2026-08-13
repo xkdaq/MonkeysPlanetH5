@@ -1300,26 +1300,6 @@ body {
   color: #98a2b3;
 }
 
-.fav-toggle {
-  display: block;
-  margin: 0 16px 18px;
-  padding: 9px 0;
-  width: calc(100% - 32px);
-  border: 1px solid rgba(16, 24, 40, 0.1);
-  border-radius: 999px;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 700;
-  color: #667085;
-  background: #fff;
-}
-
-.fav-toggle.active {
-  color: #b7791f;
-  border-color: rgba(246, 196, 83, 0.6);
-  background: #fffbeb;
-}
-
 /* ========== 笔记画板 ========== */
 
 .sketch-canvas {
