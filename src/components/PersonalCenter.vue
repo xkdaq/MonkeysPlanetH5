@@ -120,6 +120,23 @@
       </div>
       <img class="pc-donate-qrcode" :src="`${baseUrl}assets/zanshang.jpg`" alt="微信赞赏码" />
       <p class="pc-donate-hint">微信「扫一扫」，或长按识别二维码，即可赞赏支持</p>
+
+      <div v-if="donations.length" class="pc-donate-thanks">
+        <p class="pc-donate-thanks-title">感谢支持<span>共 {{ donations.length }} 份心意</span></p>
+        <ul class="pc-donate-thanks-list">
+          <li v-for="(item, index) in donations" :key="index">
+            <div class="pc-donate-thanks-row">
+              <strong>{{ maskName(item.name) }}</strong>
+              <em>¥{{ formatAmount(item.amount) }}</em>
+            </div>
+            <div class="pc-donate-thanks-sub">
+              <span>{{ item.date }}</span>
+              <span v-if="item.message">{{ item.message }}</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
       <div class="pc-donate-notice">
         <p>说明：赞赏完全出于自愿，属于个人之间的感谢与支持，不构成任何商品或服务交易，也不承诺任何回报；赞赏前请确认系本人真实意愿。</p>
       </div>
@@ -190,6 +207,7 @@
 import { computed, ref, watch } from 'vue'
 import { showConfirmDialog, showDialog, showFailToast, showSuccessToast } from 'vant'
 import { submitFeedback } from '../api/feedback'
+import { fetchDonations } from '../api/donations'
 import { clearLocalData, getHistory } from '../utils/localStore'
 
 const emit = defineEmits(['open'])
@@ -201,6 +219,7 @@ const baseUrl = import.meta.env.BASE_URL
 const show = ref(false)
 const view = ref('menu')
 const history = ref([])
+const donations = ref([])
 
 // 与后端 sys_feedback.feedback_type 枚举一致：1功能建议 2BUG反馈 3账号问题 4其他 5求资料 6链接失效
 const feedbackTypes = [
@@ -236,8 +255,41 @@ watch(show, (visible) => {
   }
 })
 
+watch(view, (target) => {
+  if (target === 'donate') {
+    loadDonations()
+  }
+})
+
 function refreshLists() {
   history.value = getHistory()
+}
+
+async function loadDonations() {
+  try {
+    donations.value = await fetchDonations()
+  } catch (error) {
+    donations.value = []
+  }
+}
+
+function formatAmount(value) {
+  const num = Number(value)
+  if (!Number.isFinite(num)) {
+    return value
+  }
+  return num.toFixed(2).replace(/\.?0+$/, '')
+}
+
+function maskName(name) {
+  if (!name) {
+    return '匿名'
+  }
+  const chars = [...name]
+  if (chars.length <= 1) {
+    return name
+  }
+  return chars[0] + '*'.repeat(chars.length - 1)
 }
 
 function openPanel() {
