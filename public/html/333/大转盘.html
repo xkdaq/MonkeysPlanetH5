@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>考研 · 抽题大转盘</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #1a1a2e;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #e0e0e0;
+  overflow-x: hidden;
+}
+
+/* 顶部标题 */
+.header {
+  text-align: center;
+  padding: 24px 16px 8px;
+}
+.header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+}
+.header p {
+  font-size: 13px;
+  color: #888;
+  margin-top: 4px;
+}
+
+/* 题库选择器 */
+.bank-select {
+  display: flex;
+  justify-content: center;
+  padding: 14px 16px 4px;
+  max-width: 640px;
+  width: 100%;
+  --bank-color: #07C160;
+}
+.bank-select select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 9px 38px 9px 18px;
+  border-radius: 24px;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23bbb' d='M6 8L1 3h10z'/%3E%3C/svg%3E") no-repeat right 14px center;
+  color: #fff;
+  font-size: 14px;
+  min-width: 220px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.bank-select select:focus {
+  border-color: var(--bank-color);
+}
+.bank-select select option {
+  background: #1a1a2e;
+  color: #fff;
+  font-size: 14px;
+}
+
+/* 转盘容器 */
+.wheel-container {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  margin: 16px auto 16px;
+}
+
+/* 指针 */
+.pointer {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 16px solid transparent;
+  border-right: 16px solid transparent;
+  border-top: 28px solid #07C160;
+  z-index: 10;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+.pointer::after {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: -8px;
+  width: 16px;
+  height: 16px;
+  background: #07C160;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(7,193,96,0.6);
+}
+
+/* 画布 */
+#wheelCanvas {
+  width: 100%;
+  height: 100%;
+  transition: transform 0s;
+}
+
+/* 中心按钮 */
+.center-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #07C160, #06AD56);
+  border: 4px solid #fff;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(7,193,96,0.5);
+  transition: transform 0.2s, box-shadow 0.2s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.center-btn:active {
+  transform: translate(-50%, -50%) scale(0.92);
+}
+.center-btn.spinning {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* 题目卡片 */
+.question-card {
+  width: 92%;
+  max-width: 640px;
+  margin: 0 auto 40px;
+  background: #252542;
+  border-radius: 16px;
+  padding: 24px 20px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  display: none;
+  animation: fadeInUp 0.4s ease;
+}
+.question-card.show {
+  display: block;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.q-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.q-tag {
+  background: rgba(7,193,96,0.15);
+  color: #07C160;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.q-score {
+  color: #aaa;
+  font-size: 12px;
+}
+
+.q-title {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #f0f0f0;
+  margin-bottom: 20px;
+  text-align: justify;
+}
+
+/* 查看解析按钮 */
+.toggle-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #07C160, #06AD56);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  letter-spacing: 1px;
+}
+.toggle-btn:active {
+  opacity: 0.85;
+}
+.toggle-btn .arrow {
+  display: inline-block;
+  transition: transform 0.3s;
+  margin-left: 4px;
+}
+.toggle-btn.open .arrow {
+  transform: rotate(180deg);
+}
+
+/* 按钮行 */
+.btn-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.btn-row .toggle-btn,
+.btn-row .again-btn {
+  flex: 1;
+  width: auto;
+  margin-top: 0;
+}
+
+/* 解析区域 */
+.analysis-box {
+  margin-top: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, margin-top 0.3s ease;
+}
+.analysis-box.show {
+  max-height: 5000px;
+  margin-top: 16px;
+}
+.analysis-content {
+  background: #1e1e36;
+  border-radius: 12px;
+  padding: 18px 20px;
+  font-size: 14px;
+  line-height: 1.85;
+  color: #e8e8e8;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+.analysis-content p,
+.analysis-content li,
+.analysis-content div {
+  margin-bottom: 10px;
+  color: #e8e8e8;
+}
+.analysis-content span {
+  color: #4cd68f !important;
+}
+.analysis-content strong, .analysis-content b {
+  color: #fff;
+}
+
+/* 再抽一题按钮 */
+.again-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: #07C160;
+  border: 2px solid #07C160;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+}
+.again-btn:active {
+  background: rgba(7,193,96,0.1);
+}
+
+/* 底部信息 */
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #555;
+  font-size: 12px;
+}
+
+/* 空状态 / 加载 / 错误 */
+.empty-hint {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  padding: 40px 20px;
+}
+.error-hint {
+  text-align: center;
+  color: #e06c6c;
+  font-size: 14px;
+  padding: 20px;
+}
+.retry-btn {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 22px;
+  border: 1.5px solid #07C160;
+  color: #07C160;
+  background: transparent;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1 id="pageTitle">考研 · 抽题大转盘</h1>
+  <p id="pageSub">加载题库中…</p>
+</div>
+
+<!-- 题库切换 -->
+<div class="bank-select" id="bankSelect"></div>
+
+<div class="wheel-container" id="wheelWrap" style="display:none;">
+  <div class="pointer"></div>
+  <canvas id="wheelCanvas" width="340" height="340"></canvas>
+  <div class="center-btn" id="spinBtn">GO</div>
+</div>
+
+<div class="empty-hint" id="emptyHint">
+  <span id="emptyText">点击中间「GO」按钮，转动转盘抽题</span>
+</div>
+
+<div class="question-card" id="qCard">
+  <div class="q-meta">
+    <span class="q-tag" id="qType">问答题</span>
+    <span class="q-score" id="qScore">15分</span>
+    <span class="q-score" id="qIndex"></span>
+  </div>
+  <div class="q-title" id="qTitle"></div>
+  <div class="btn-row">
+    <button class="toggle-btn" id="toggleBtn">
+      查看解析 <span class="arrow">▾</span>
+    </button>
+    <button class="again-btn" id="againBtn">再抽一题</button>
+  </div>
+  <div class="analysis-box" id="analysisBox">
+    <div class="analysis-content" id="analysisContent"></div>
+  </div>
+</div>
+
+<div class="footer" id="footerText"></div>
+
+<script>
+// ===== 接口配置 =====
+// 前端部署在 study 域名，后端接口在 api 域名，走跨域（后端已配 CORS）
+const API_BASE = 'https://api.monkeysxu.top';
+
+const canvas = document.getElementById('wheelCanvas');
+const ctx = canvas.getContext('2d');
+const spinBtn = document.getElementById('spinBtn');
+const qCard = document.getElementById('qCard');
+const emptyHint = document.getElementById('emptyHint');
+const emptyText = document.getElementById('emptyText');
+const bankSelect = document.getElementById('bankSelect');
+const wheelWrap = document.getElementById('wheelWrap');
+const toggleBtn = document.getElementById('toggleBtn');
+const analysisBox = document.getElementById('analysisBox');
+const analysisContent = document.getElementById('analysisContent');
+const againBtn = document.getElementById('againBtn');
+const pageSub = document.getElementById('pageSub');
+const pageTitle = document.getElementById('pageTitle');
+const footerText = document.getElementById('footerText');
+
+const CX = 170, CY = 170, R = 160;
+let questions = [];
+let N = 0;
+let segAngle = 0;
+let currentRotation = 0;
+let isSpinning = false;
+let currentBankColor = '#07C160';
+
+// 转盘配色（8 色循环）
+const colors = [
+  '#07C160', '#36C5DD', '#FFB347', '#FF6B81',
+  '#A8E6CF', '#FFD93D', '#C490E4', '#F88B6D'
+];
+
+// ===== 数据加载 =====
+async function loadBanks() {
+  try {
+    const resp = await fetch(API_BASE + '/h5/wheel/banks');
+    const json = await resp.json();
+    if ((json.code !== 0 && json.code !== 200) || !Array.isArray(json.data)) {
+      throw new Error(json.msg || '接口返回异常');
+    }
+    const banks = json.data;
+    if (!banks.length) {
+      emptyText.textContent = '暂无可用题库';
+      pageSub.textContent = '请稍后再来';
+      return;
+    }
+    renderBankSelect(banks);
+    const saved = localStorage.getItem('wheelBankId');
+    const target = banks.find(b => String(b.id) === String(saved)) || banks[0];
+    await selectBank(target.id, banks);
+  } catch (e) {
+    pageTitle.textContent = '加载失败';
+    emptyText.textContent = '题库接口暂时不可用，请稍后重试';
+    showRetry();
+  }
+}
+
+function showRetry() {
+  const btn = document.createElement('button');
+  btn.className = 'retry-btn';
+  btn.textContent = '重新加载';
+  btn.onclick = () => location.reload();
+  emptyHint.appendChild(btn);
+}
+
+function renderBankSelect(banks) {
+  bankSelect.innerHTML = '';
+  const sel = document.createElement('select');
+  sel.id = 'bankSelector';
+  banks.forEach(bank => {
+    const opt = document.createElement('option');
+    opt.value = bank.id;
+    opt.textContent = bank.name + '（' + bank.questionCount + '题）';
+    sel.appendChild(opt);
+  });
+  sel.onchange = () => selectBank(sel.value, banks);
+  bankSelect.appendChild(sel);
+}
+
+async function selectBank(bankId, banks) {
+  banks = banks || [];
+  try {
+    const resp = await fetch(API_BASE + '/h5/wheel/questions?bankId=' + bankId);
+    const json = await resp.json();
+    if ((json.code !== 0 && json.code !== 200) || !Array.isArray(json.data)) {
+      throw new Error(json.msg || '接口返回异常');
+    }
+    const list = json.data;
+    if (!list.length) {
+      emptyText.textContent = '该题库暂无题目';
+      wheelWrap.style.display = 'none';
+      qCard.classList.remove('show');
+      return;
+    }
+
+    localStorage.setItem('wheelBankId', bankId);
+    questions = list;
+    N = questions.length;
+    segAngle = (Math.PI * 2) / N;
+    currentRotation = 0;
+
+    // 界面状态
+    const bank = banks.find(b => String(b.id) === String(bankId));
+    if (bank) {
+      currentBankColor = bank.color || '#07C160';
+      pageTitle.textContent = bank.name;
+      pageSub.textContent = bank.description || ('共 ' + N + ' 题');
+      footerText.textContent = (bank.source ? bank.source + ' · ' : '') + '数据来自题库接口';
+    } else {
+      pageSub.textContent = '共 ' + N + ' 题';
+    }
+    const sel = document.getElementById('bankSelector');
+    if (sel) sel.value = bankId;
+    bankSelect.style.setProperty('--bank-color', currentBankColor);
+
+    spinBtn.style.background = 'linear-gradient(135deg, ' + currentBankColor + ', ' + shadeColor(currentBankColor, -12) + ')';
+    spinBtn.style.boxShadow = '0 4px 16px ' + hexToRgba(currentBankColor, 0.5);
+    document.querySelector('.pointer').style.borderTopColor = currentBankColor;
+
+    wheelWrap.style.display = 'block';
+    emptyHint.style.display = 'none';
+    qCard.classList.remove('show');
+    drawWheel(0);
+  } catch (e) {
+    emptyText.textContent = '题目加载失败，请重试';
+  }
+}
+
+// ===== 转盘绘制 =====
+function drawWheel(rotation) {
+  ctx.clearRect(0, 0, 340, 340);
+  const showLabel = N <= 80;
+
+  for (let i = 0; i < N; i++) {
+    const startAngle = i * segAngle - Math.PI / 2 + rotation;
+    const endAngle = startAngle + segAngle;
+
+    ctx.beginPath();
+    ctx.moveTo(CX, CY);
+    ctx.arc(CX, CY, R, startAngle, endAngle);
+    ctx.closePath();
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.fill();
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    if (showLabel) {
+      ctx.save();
+      ctx.translate(CX, CY);
+      ctx.rotate(startAngle + segAngle / 2);
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#fff';
+      const fontSize = N > 60 ? 9 : N > 40 ? 10 : N > 30 ? 11 : 13;
+      ctx.font = 'bold ' + fontSize + 'px sans-serif';
+      ctx.fillText('第' + (i + 1) + '题', R - 16, 0);
+      ctx.restore();
+    }
+  }
+
+  ctx.beginPath();
+  ctx.arc(CX, CY, R, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+}
+
+// ===== 旋转抽题 =====
+function spin() {
+  if (isSpinning || N === 0) return;
+  isSpinning = true;
+  spinBtn.classList.add('spinning');
+  spinBtn.textContent = '...';
+  qCard.classList.remove('show');
+  emptyHint.style.display = 'none';
+
+  const targetIndex = Math.floor(Math.random() * N);
+  const targetAngle = -(targetIndex * segAngle + segAngle / 2);
+  const extraSpins = 5 + Math.floor(Math.random() * 3);
+  const finalRotation = currentRotation - (currentRotation % (Math.PI * 2)) + extraSpins * Math.PI * 2 + targetAngle;
+
+  const duration = 4000;
+  const startTime = performance.now();
+  const startRotation = currentRotation;
+
+  function animate(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    currentRotation = startRotation + (finalRotation - startRotation) * eased;
+    drawWheel(currentRotation);
+
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      currentRotation = finalRotation;
+      drawWheel(currentRotation);
+      isSpinning = false;
+      spinBtn.classList.remove('spinning');
+      spinBtn.textContent = 'GO';
+      showQuestion(targetIndex);
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+// ===== 题目展示 =====
+function showQuestion(index) {
+  const q = questions[index];
+  document.getElementById('qType').textContent = q.type || '问答题';
+  document.getElementById('qScore').textContent = (q.score || 0) + '分';
+  document.getElementById('qIndex').textContent = '第' + (index + 1) + '题 / 共' + N + '题';
+  document.getElementById('qTitle').textContent = q.title || '';
+
+  analysisContent.innerHTML = q.analysis || '暂无解析';
+
+  analysisBox.classList.remove('show');
+  toggleBtn.classList.remove('open');
+  toggleBtn.innerHTML = '查看解析 <span class="arrow">▾</span>';
+
+  qCard.classList.add('show');
+  setTimeout(() => {
+    qCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+// ===== 事件 =====
+toggleBtn.addEventListener('click', () => {
+  const isOpen = analysisBox.classList.toggle('show');
+  toggleBtn.classList.toggle('open', isOpen);
+  toggleBtn.innerHTML = isOpen
+    ? '收起解析 <span class="arrow">▾</span>'
+    : '查看解析 <span class="arrow">▾</span>';
+});
+
+againBtn.addEventListener('click', spin);
+spinBtn.addEventListener('click', spin);
+
+document.addEventListener('touchstart', (e) => {
+  if (e.touches.length > 1) e.preventDefault();
+}, { passive: false });
+
+// ===== 工具函数 =====
+function shadeColor(hex, percent) {
+  const n = parseInt(hex.replace('#', ''), 16);
+  const amt = Math.round(2.55 * percent);
+  const r = Math.min(255, Math.max(0, (n >> 16) + amt));
+  const g = Math.min(255, Math.max(0, ((n >> 8) & 0xff) + amt));
+  const b = Math.min(255, Math.max(0, (n & 0xff) + amt));
+  return '#' + (r << 16 | g << 8 | b).toString(16).padStart(6, '0');
+}
+
+function hexToRgba(hex, alpha) {
+  const n = parseInt(hex.replace('#', ''), 16);
+  return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 0xff) + ',' + (n & 0xff) + ',' + alpha + ')';
+}
+
+// ===== 启动 =====
+loadBanks();
+</script>
+
+</body>
+</html>
