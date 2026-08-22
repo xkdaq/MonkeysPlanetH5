@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="version" content="wheel-v20260821.2">
 <title>考研 · 抽题大转盘</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -355,9 +356,46 @@ body {
 <div class="footer" id="footerText"></div>
 
 <script>
+// ===== 版本标记 =====
+// 用于排查线上是否最新版：页脚会显示，控制台也会打印
+var PAGE_VERSION = 'wheel-v20260821.2';
+console.log('[大转盘] 版本:', PAGE_VERSION);
 // ===== 接口配置 =====
 // 前端部署在 study 域名，后端接口在 api 域名，走跨域（后端已配 CORS）
 const API_BASE = 'https://api.monkeysxu.top';
+
+// ===== 响应解密 =====
+// 后端对 /h5/wheel/* 返回整体 AES-CBC 加密（Base64），此处解密后解析。
+// key/iv 与其他 H5 接口共用，但以混淆形式存储（码点异或+偏移），源码中不出现明文。
+function _mk(a, b) {
+  for (var s = '', i = 0; i < a.length; i++) s += String.fromCharCode((a[i] ^ b) - 5);
+  return s;
+}
+var _AES_KEY = _mk([99,102,50,50,40,32,13,60,16,6,36,4,17,40,1,41], 0x5A);
+var _AES_IV  = _mk([10,96,52,100,3,61,13,2,35,55,37,60,12,96,23,40], 0x5A);
+
+// AES-CBC 解密（PKCS7，与后端 PKCS5Padding 兼容），返回明文 JSON 字符串
+async function _aesDecrypt(b64) {
+  const keyBuf = new TextEncoder().encode(_AES_KEY);
+  const ivBuf = new TextEncoder().encode(_AES_IV);
+  const cryptoKey = await crypto.subtle.importKey('raw', keyBuf, { name: 'AES-CBC' }, false, ['decrypt']);
+  const bin = atob(b64);
+  const data = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) data[i] = bin.charCodeAt(i);
+  const plain = await crypto.subtle.decrypt({ name: 'AES-CBC', iv: ivBuf }, cryptoKey, data);
+  return new TextDecoder('utf-8').decode(plain);
+}
+
+// 统一解析响应：先按明文尝试，失败则按密文解密（兼容新旧后端）
+async function _parseBody(resp) {
+  const text = await resp.text();
+  try { return JSON.parse(text); } catch (e) {}
+  const dec = await _aesDecrypt(text);
+  if (dec) {
+    try { return JSON.parse(dec); } catch (e) {}
+  }
+  throw new Error('数据解析失败');
+}
 
 const canvas = document.getElementById('wheelCanvas');
 const ctx = canvas.getContext('2d');
@@ -393,7 +431,7 @@ const colors = [
 async function loadBanks() {
   try {
     const resp = await fetch(API_BASE + '/h5/wheel/banks');
-    const json = await resp.json();
+    const json = await _parseBody(resp);
     if ((json.code !== 0 && json.code !== 200) || !Array.isArray(json.data)) {
       throw new Error(json.msg || '接口返回异常');
     }
@@ -440,7 +478,7 @@ async function selectBank(bankId, banks) {
   banks = banks || [];
   try {
     const resp = await fetch(API_BASE + '/h5/wheel/questions?bankId=' + bankId);
-    const json = await resp.json();
+    const json = await _parseBody(resp);
     if ((json.code !== 0 && json.code !== 200) || !Array.isArray(json.data)) {
       throw new Error(json.msg || '接口返回异常');
     }
@@ -464,7 +502,7 @@ async function selectBank(bankId, banks) {
       currentBankColor = bank.color || '#07C160';
       pageTitle.textContent = bank.name;
       pageSub.textContent = bank.description || ('共 ' + N + ' 题');
-      footerText.textContent = (bank.source ? bank.source + ' · ' : '') + '数据来自题库接口';
+      footerText.textContent = (bank.source ? bank.source + ' · ' : '') + '数据来自题库接口 · v' + PAGE_VERSION.replace('wheel-v', '');
     } else {
       pageSub.textContent = '共 ' + N + ' 题';
     }
@@ -618,6 +656,7 @@ function hexToRgba(hex, alpha) {
 }
 
 // ===== 启动 =====
+footerText.textContent = 'v' + PAGE_VERSION.replace('wheel-v', '');
 loadBanks();
 </script>
 
