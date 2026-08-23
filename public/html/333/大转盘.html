@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="version" content="wheel-v20260821.2">
-<title>考研 · 抽题大转盘</title>
+<meta name="version" content="wheel-v20260823.4">
+<meta name="description" content="考研抽题大转盘，随机抽题、查看解析、高效复习。">
+<title>公众号:猴子考研 ·抽题大转盘</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -22,21 +23,46 @@ body {
 /* 顶部标题 */
 .header {
   text-align: center;
-  padding: 24px 16px 8px;
+  padding: calc(env(safe-area-inset-top, 0px) + 48px) 16px 8px;
+  width: 100%;
+  max-width: 640px;
 }
+/* 头部左上角「回到首页」— 固定于视口，不占用标题区域 */
+.header-home {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  left: 12px;
+  z-index: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #07C160;
+  background: rgba(26, 26, 46, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(7,193,96,0.35);
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background .2s;
+}
+.header-home:active { background: rgba(7,193,96,0.25); }
+.header-home svg { width: 12px; height: 12px; }
 .header h1 {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   color: #fff;
   letter-spacing: 1px;
+  line-height: 1.3;
 }
 .header p {
-  font-size: 13px;
+  font-size: 12px;
   color: #888;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
-/* 题库选择器 */
+/* 题库选择器 · 自定义下拉 */
 .bank-select {
   display: flex;
   justify-content: center;
@@ -45,28 +71,307 @@ body {
   width: 100%;
   --bank-color: #07C160;
 }
-.bank-select select {
-  appearance: none;
-  -webkit-appearance: none;
-  padding: 9px 38px 9px 18px;
-  border-radius: 24px;
-  border: 1.5px solid rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.06) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23bbb' d='M6 8L1 3h10z'/%3E%3C/svg%3E") no-repeat right 14px center;
+.bank-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  width: 100%;
+  max-width: 380px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(7,193,96,0.35);
+  background: linear-gradient(135deg, rgba(7,193,96,0.12), rgba(7,193,96,0.04));
   color: #fff;
   font-size: 14px;
-  min-width: 220px;
+  font-weight: 500;
   cursor: pointer;
   outline: none;
-  transition: border-color 0.2s;
+  transition: transform .15s, border-color .2s, box-shadow .2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  position: relative;
 }
-.bank-select select:focus {
-  border-color: var(--bank-color);
+.bank-trigger:active { transform: scale(0.98); }
+.bank-trigger.open { border-color: var(--bank-color); box-shadow: 0 0 0 3px rgba(7,193,96,0.18); }
+.bank-trigger .bank-text {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.bank-select select option {
-  background: #1a1a2e;
+.bank-trigger .bank-text .bank-meta {
+  display: block;
+  font-size: 11px;
+  color: #aaa;
+  font-weight: 400;
+  margin-top: 1px;
+}
+.bank-trigger .bank-arrow {
+  font-size: 12px;
+  color: #aaa;
+  transition: transform .25s;
+}
+.bank-trigger.open .bank-arrow { transform: rotate(180deg); }
+
+/* 不重复抽题开关 */
+.no-repeat-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 10px;
+  width: 100%;
+  margin: 0 auto;
+  justify-content: space-between;
+}
+.no-repeat-right { display: flex; align-items: center; gap: 10px; }
+.no-repeat-label { font-size: 14px; color: #e0e0e0; }
+.switch { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch .slider {
+  position: absolute; cursor: pointer; inset: 0;
+  background: #3a3a45; border-radius: 999px; transition: .25s;
+}
+.switch .slider:before {
+  content: ""; position: absolute; height: 18px; width: 18px;
+  left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .25s;
+}
+.switch input:checked + .slider { background: #07C160; }
+.switch input:checked + .slider:before { transform: translateX(18px); }
+.reset-drawn {
+  font-size: 12px;
+  color: #888;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+.reset-drawn:active { color: #07C160; border-color: rgba(7,193,96,0.5); }
+.drawn-count {
+  display: inline-block;
+  font-size: 11px;
+  color: #888;
+  margin-left: 6px;
+  letter-spacing: 0.2px;
+}
+
+/* 弹层 */
+.bank-sheet {
+  position: fixed; inset: 0;
+  z-index: 1000;
+  display: none;
+}
+.bank-sheet.show { display: block; }
+.bank-sheet-mask {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px);
+  animation: fadeIn .2s;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.bank-sheet-body {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 420px;
+  background: #1f1f3a;
+  border-radius: 18px 18px 18px 18px;
+  padding: 20px 16px 12px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.08);
+  animation: slideUp .25s cubic-bezier(.25,.85,.3,1);
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+@keyframes slideUp { from { transform: translate(-50%, 30px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+.bank-sheet-body h4 {
+  font-size: 15px;
   color: #fff;
-  font-size: 14px;
+  margin-bottom: 12px;
+  text-align: center;
+  font-weight: 600;
 }
+.bank-options {
+  list-style: none;
+  margin: 0; padding: 0;
+  overflow-y: auto;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
+}
+.bank-options li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #e0e0e0;
+  cursor: pointer;
+  transition: background .15s;
+  border: 1px solid transparent;
+}
+.bank-options li:active { background: rgba(7,193,96,0.18); }
+.bank-options li.active {
+  background: rgba(7,193,96,0.18);
+  border-color: rgba(7,193,96,0.5);
+  color: #fff;
+}
+.bank-options li .opt-idx {
+  width: 24px; height: 24px;
+  border-radius: 7px;
+  background: rgba(255,255,255,0.08);
+  font-size: 12px;
+  color: #aaa;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.bank-options li.active .opt-idx {
+  background: #07C160;
+  color: #fff;
+}
+.bank-options li .opt-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bank-options li .opt-count {
+  font-size: 11px;
+  color: #888;
+  flex-shrink: 0;
+}
+.bank-options li.active .opt-check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #07C160;
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+}
+.bank-sheet-close {
+  display: block;
+  margin: 8px auto 0;
+  padding: 8px 28px;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  color: #ccc;
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* 右上角「更多」按钮 */
+.header-more {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  right: 12px;
+  z-index: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: #07C160;
+  background: rgba(26, 26, 46, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(7,193,96,0.35);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .2s;
+}
+.header-more:active { background: rgba(7,193,96,0.25); }
+
+/* 更多面板（整合题库选择 / 不重复抽题 / 抽题历史） */
+.more-sheet {
+  position: fixed; inset: 0;
+  z-index: 1000;
+  display: none;
+}
+.more-sheet.show { display: block; }
+.more-sheet-mask {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px);
+  animation: fadeIn .2s;
+}
+.more-sheet-body {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 420px;
+  background: #1f1f3a;
+  border-radius: 18px;
+  padding: 18px 16px 12px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.08);
+  animation: slideUp .25s cubic-bezier(.25,.85,.3,1);
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+}
+.more-sheet-body h4 {
+  font-size: 15px; color: #fff; margin-bottom: 10px;
+  text-align: center; font-weight: 600;
+}
+.more-section {
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding: 12px 0;
+}
+.more-section:first-of-type { border-top: none; padding-top: 4px; }
+.more-section .bank-select { padding: 0; }
+.more-section-title {
+  font-size: 13px; color: #aaa; margin-bottom: 8px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.more-section-title .more-count { color: #07C160; font-size: 12px; }
+.more-clear {
+  display: block; margin: 8px auto 0; padding: 6px 20px;
+  background: transparent; border: 1px solid rgba(255,255,255,0.15);
+  color: #999; border-radius: 999px; font-size: 12px; cursor: pointer;
+}
+.more-clear:active { color: #07C160; border-color: rgba(7,193,96,0.5); }
+
+/* 抽题历史列表 */
+.history-list {
+  list-style: none; margin: 0; padding: 0;
+  overflow-y: auto; max-height: 34vh;
+  -webkit-overflow-scrolling: touch;
+}
+.history-list li {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 9px 12px; border-radius: 10px;
+  cursor: pointer; border: 1px solid transparent;
+  transition: background .15s;
+}
+.history-list li:active { background: rgba(7,193,96,0.15); }
+.history-list li + li { margin-top: 2px; }
+.history-title {
+  font-size: 13px; color: #e0e0e0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.history-meta { font-size: 11px; color: #888; display: flex; gap: 8px; }
+.history-empty {
+  text-align: center; color: #666; font-size: 13px; padding: 18px 0;
+}
+
+/* 更多面板内可点击行（如抽题历史入口） */
+.more-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 10px; border-radius: 10px; cursor: pointer;
+  font-size: 14px; color: #e0e0e0; transition: background .15s;
+}
+.more-row:active { background: rgba(7,193,96,0.15); }
+.more-row .more-row-right { display: flex; align-items: center; }
+.more-row .more-row-arrow { color: #888; font-size: 14px; }
+.more-row .more-count { color: #07C160; font-size: 12px; margin-right: 4px; }
+/* 二级弹框：层级高于更多面板 */
+.history-sheet { z-index: 1100; }
 
 /* 转盘容器 */
 .wheel-container {
@@ -283,14 +588,57 @@ body {
 
 /* 底部信息 */
 .footer {
+  margin-top: auto;
+  width: 100%;
   text-align: center;
   padding: 20px;
   color: #555;
   font-size: 12px;
+  line-height: 1.8;
+}
+.footer a {
+  color: #888;
+  text-decoration: none;
+  margin: 0 6px;
+}
+.footer a:active { color: #07C160; }
+
+/* 「思考一下」提示吐司 */
+.thinking-tip {
+  position: fixed;
+  left: 50%;
+  top: 30%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 14px 22px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  display: none;
+  z-index: 2000;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+  border: 1px solid rgba(7,193,96,0.5);
+  animation: tipIn .25s ease-out;
+  text-align: center;
+  line-height: 1.6;
+}
+.thinking-tip.show { display: block; }
+.thinking-tip .tip-em {
+  color: #4cd68f;
+  font-weight: 700;
+}
+@keyframes tipIn {
+  from { opacity: 0; transform: translate(-50%, -40%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
 }
 
 /* 空状态 / 加载 / 错误 */
 .empty-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
   text-align: center;
   color: #666;
   font-size: 14px;
@@ -304,7 +652,7 @@ body {
 }
 .retry-btn {
   display: inline-block;
-  margin-top: 12px;
+  margin-top: 0;
   padding: 8px 22px;
   border: 1.5px solid #07C160;
   color: #07C160;
@@ -318,12 +666,79 @@ body {
 <body>
 
 <div class="header">
-  <h1 id="pageTitle">考研 · 抽题大转盘</h1>
+  <a class="header-home" href="https://study.monkeysxu.top" target="_blank" rel="noopener noreferrer" aria-label="回到首页">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    首页
+  </a>
+  <button class="header-more" id="moreBtn" type="button">更多</button>
+  <h1 id="pageTitle">抽题大转盘</h1>
   <p id="pageSub">加载题库中…</p>
 </div>
 
-<!-- 题库切换 -->
-<div class="bank-select" id="bankSelect"></div>
+<!-- 题库触发按钮（顶部） -->
+<div class="bank-select">
+  <button class="bank-trigger" id="bankTrigger" type="button" aria-haspopup="true">
+    <span class="bank-text" id="bankText">
+      <span>选择题库</span>
+      <span class="bank-meta">点击选择已收录题库</span>
+    </span>
+    <span class="bank-arrow">▾</span>
+  </button>
+</div>
+
+<!-- 更多面板：整合不重复抽题 / 抽题历史入口 -->
+<div class="more-sheet" id="moreSheet" role="dialog" aria-modal="true">
+  <div class="more-sheet-mask" id="moreMask"></div>
+  <div class="more-sheet-body">
+    <h4>更多</h4>
+
+    <div class="more-section">
+      <div class="no-repeat-bar" id="noRepeatBar">
+        <span class="no-repeat-label">抽过的题不再重复<span class="drawn-count" id="drawnCount"></span></span>
+        <span class="no-repeat-right">
+          <label class="switch">
+            <input type="checkbox" id="noRepeatSwitch">
+            <span class="slider"></span>
+          </label>
+          <button class="reset-drawn" id="resetDrawnBtn" type="button">重置本题库</button>
+        </span>
+      </div>
+    </div>
+
+    <div class="more-section">
+      <div class="more-row" id="historyRow">
+        <span>抽题历史</span>
+        <span class="more-row-right"><span class="more-count" id="moreHistoryCount"></span><span class="more-row-arrow">›</span></span>
+      </div>
+    </div>
+
+    <button class="bank-sheet-close" id="moreClose" type="button">关闭</button>
+  </div>
+</div>
+
+<!-- 抽题历史（二级弹框） -->
+<div class="more-sheet history-sheet" id="historySheet" role="dialog" aria-modal="true">
+  <div class="more-sheet-mask" id="historyMask"></div>
+  <div class="more-sheet-body">
+    <h4>抽题历史 <span class="more-count" id="historyCount"></span></h4>
+    <ul class="history-list" id="historyList"></ul>
+    <button class="more-clear" id="clearHistoryBtn" type="button">清空历史</button>
+    <button class="bank-sheet-close" id="historyClose" type="button">关闭</button>
+  </div>
+</div>
+
+<!-- 题库弹层 -->
+<div class="bank-sheet" id="bankSheet" role="dialog" aria-modal="true">
+  <div class="bank-sheet-mask" id="bankMask"></div>
+  <div class="bank-sheet-body">
+    <h4>选择题库</h4>
+    <ul class="bank-options" id="bankOptions"></ul>
+    <button class="bank-sheet-close" id="bankClose" type="button">取消</button>
+  </div>
+</div>
 
 <div class="wheel-container" id="wheelWrap" style="display:none;">
   <div class="pointer"></div>
@@ -353,16 +768,117 @@ body {
   </div>
 </div>
 
-<div class="footer" id="footerText"></div>
+<div class="thinking-tip" id="thinkingTip">
+  别着急 · <span class="tip-em">先思考一下</span><br>
+  再看解析效果更好
+</div>
+
+<div class="thinking-tip" id="wheelToast"></div>
+
+<div class="footer" id="footer">
+  <div id="footerText">版本:v20260823.4</div>
+  <div>
+    <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">鄂ICP备2024066684号-4</a>
+  </div>
+</div>
 
 <script>
 // ===== 版本标记 =====
-// 用于排查线上是否最新版：页脚会显示，控制台也会打印
-var PAGE_VERSION = 'wheel-v20260821.2';
+var PAGE_VERSION = 'wheel-v20260823.4';
 console.log('[大转盘] 版本:', PAGE_VERSION);
 // ===== 接口配置 =====
-// 前端部署在 study 域名，后端接口在 api 域名，走跨域（后端已配 CORS）
 const API_BASE = 'https://api.monkeysxu.top';
+const STUDY_HOME = 'https://study.monkeysxu.top';
+
+// ===== 不重复抽题：浏览器级记录（基于 localStorage 持久 UUID 标识同一浏览器） =====
+// 说明：浏览器无硬件级设备 ID，这里用 localStorage 生成一个随机 UUID 作为「本浏览器」标识，
+// 清缓存/无痕模式会丢失，但日常使用足够稳定。
+const NO_REPEAT_KEY = 'wheel_no_repeat';
+const DRAWN_PREFIX = 'wheel_drawn_';
+const BROWSER_ID_KEY = 'wheel_browser_id';
+const HISTORY_KEY = 'wheel_history';
+const HISTORY_MAX = 200;
+
+function getBrowserId() {
+  let id = localStorage.getItem(BROWSER_ID_KEY);
+  if (!id) {
+    try { id = crypto.randomUUID(); } catch (e) { id = 'b' + Date.now() + Math.random().toString(16).slice(2); }
+    localStorage.setItem(BROWSER_ID_KEY, id);
+  }
+  return id;
+}
+function getDrawnSet(bankId) {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(DRAWN_PREFIX + bankId) || '[]').map(String));
+  } catch (e) { return new Set(); }
+}
+function addDrawn(bankId, id) {
+  const set = getDrawnSet(bankId);
+  set.add(String(id));
+  localStorage.setItem(DRAWN_PREFIX + bankId, JSON.stringify([...set]));
+}
+function clearDrawn(bankId) {
+  localStorage.removeItem(DRAWN_PREFIX + bankId);
+}
+
+// ===== 抽题历史（localStorage 持久化，按抽到顺序记录题库名/题目标题/时间） =====
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) { return []; }
+}
+function pushHistory(bankId, bankName, qid, title) {
+  let h = getHistory();
+  h.unshift({
+    bankId: String(bankId),
+    bankName: bankName || '',
+    qid: String(qid),
+    title: title || '',
+    ts: Date.now()
+  });
+  if (h.length > HISTORY_MAX) h = h.slice(0, HISTORY_MAX);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
+}
+function clearHistory() {
+  localStorage.removeItem(HISTORY_KEY);
+}
+function showToast(msg, dur) {
+  const el = document.getElementById('wheelToast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), dur || 2000);
+}
+function updateDrawnCount() {
+  if (!noRepeatSwitch.checked || _currentBankId == null || N === 0) {
+    if (drawnCount) drawnCount.textContent = '';
+    return;
+  }
+  const count = getDrawnSet(_currentBankId).size;
+  if (drawnCount) drawnCount.textContent = '（已抽 ' + count + '/' + N + '）';
+}
+
+// ===== H5 通用统计上报（复用项目内 /h5/visit/report，无后端改动） =====
+function _track(eventType, extra = {}) {
+  try {
+    const payload = {
+      eventType,
+      pagePath: location.pathname + location.search,
+      clientType: 'h5',
+      ...extra
+    };
+    fetch(API_BASE + '/h5/visit/report', {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'omit',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      keepalive: true
+    }).catch(() => {});
+  } catch (e) { /* 静默失败不影响主流程 */ }
+}
+// 页面访问 · 进入即上报
+_track('page_view', { browserId: getBrowserId() });
+// 自定义事件通用字段：pagePath 自动带到后端，materialId 用题库 id，materialTitle 带题库名
 
 // ===== 响应解密 =====
 // 后端对 /h5/wheel/* 返回整体 AES-CBC 加密（Base64），此处解密后解析。
@@ -403,7 +919,6 @@ const spinBtn = document.getElementById('spinBtn');
 const qCard = document.getElementById('qCard');
 const emptyHint = document.getElementById('emptyHint');
 const emptyText = document.getElementById('emptyText');
-const bankSelect = document.getElementById('bankSelect');
 const wheelWrap = document.getElementById('wheelWrap');
 const toggleBtn = document.getElementById('toggleBtn');
 const analysisBox = document.getElementById('analysisBox');
@@ -412,6 +927,18 @@ const againBtn = document.getElementById('againBtn');
 const pageSub = document.getElementById('pageSub');
 const pageTitle = document.getElementById('pageTitle');
 const footerText = document.getElementById('footerText');
+// 题库下拉
+const bankTrigger = document.getElementById('bankTrigger');
+const bankSheet = document.getElementById('bankSheet');
+const bankOptions = document.getElementById('bankOptions');
+const bankClose = document.getElementById('bankClose');
+const bankMask = document.getElementById('bankMask');
+const bankText = document.getElementById('bankText');
+// 思考提示
+const thinkingTip = document.getElementById('thinkingTip');
+const noRepeatSwitch = document.getElementById('noRepeatSwitch');
+const resetDrawnBtn = document.getElementById('resetDrawnBtn');
+const drawnCount = document.getElementById('drawnCount');
 
 const CX = 170, CY = 170, R = 160;
 let questions = [];
@@ -420,6 +947,10 @@ let segAngle = 0;
 let currentRotation = 0;
 let isSpinning = false;
 let currentBankColor = '#07C160';
+// 抽题计时：距上一次 spin 完成 < 阈值时点查看解析则提示
+let lastSpinFinishedAt = 0;
+const THINK_TIP_THRESHOLD = 3000;
+let hasShownAnalysisForCurrent = false;
 
 // 转盘配色（8 色循环）
 const colors = [
@@ -441,10 +972,12 @@ async function loadBanks() {
       pageSub.textContent = '请稍后再来';
       return;
     }
-    renderBankSelect(banks);
+    renderBankSheet(banks);
+    bindBankSheet();
     const saved = localStorage.getItem('wheelBankId');
     const target = banks.find(b => String(b.id) === String(saved)) || banks[0];
     await selectBank(target.id, banks);
+    _track('wheel_bank_load', { materialId: target.id, materialTitle: target.name });
   } catch (e) {
     pageTitle.textContent = '加载失败';
     emptyText.textContent = '题库接口暂时不可用，请稍后重试';
@@ -453,29 +986,162 @@ async function loadBanks() {
 }
 
 function showRetry() {
+  if (document.getElementById('retryBtn')) return;
   const btn = document.createElement('button');
   btn.className = 'retry-btn';
+  btn.id = 'retryBtn';
   btn.textContent = '重新加载';
   btn.onclick = () => location.reload();
   emptyHint.appendChild(btn);
 }
 
-function renderBankSelect(banks) {
-  bankSelect.innerHTML = '';
-  const sel = document.createElement('select');
-  sel.id = 'bankSelector';
-  banks.forEach(bank => {
-    const opt = document.createElement('option');
-    opt.value = bank.id;
-    opt.textContent = bank.name + '（' + bank.questionCount + '题）';
-    sel.appendChild(opt);
+// ===== 自定义下拉选择 =====
+let _banksCache = [];
+let _currentBankId = null;
+
+function renderBankSheet(banks) {
+  _banksCache = banks;
+  bankOptions.innerHTML = '';
+  banks.forEach((bank, idx) => {
+    const li = document.createElement('li');
+    li.dataset.id = bank.id;
+    li.innerHTML = `
+      <span class="opt-idx">${idx + 1}</span>
+      <span class="opt-name">${escapeHtml(bank.name)}</span>
+      <span class="opt-count">${bank.questionCount}题</span>
+      <span class="opt-check" style="display:none">✓</span>
+    `;
+    li.onclick = () => {
+      hideBankSheet();
+      selectBank(bank.id, _banksCache);
+    };
+    bankOptions.appendChild(li);
   });
-  sel.onchange = () => selectBank(sel.value, banks);
-  bankSelect.appendChild(sel);
+}
+
+function bindBankSheet() {
+  bankTrigger.onclick = () => {
+    if (bankSheet.classList.contains('show')) hideBankSheet();
+    else showBankSheet();
+  };
+  bankClose.onclick = hideBankSheet;
+  bankMask.onclick = hideBankSheet;
+}
+
+// ===== 更多面板 =====
+const moreBtn = document.getElementById('moreBtn');
+const moreSheet = document.getElementById('moreSheet');
+const moreMask = document.getElementById('moreMask');
+const moreClose = document.getElementById('moreClose');
+const historyRow = document.getElementById('historyRow');
+const moreHistoryCount = document.getElementById('moreHistoryCount');
+
+// ===== 抽题历史二级弹框 =====
+const historySheet = document.getElementById('historySheet');
+const historyMask = document.getElementById('historyMask');
+const historyClose = document.getElementById('historyClose');
+const historyList = document.getElementById('historyList');
+const historyCount = document.getElementById('historyCount');
+const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+
+function showMoreSheet() {
+  const h = getHistory();
+  if (moreHistoryCount) moreHistoryCount.textContent = h.length ? '（' + h.length + '）' : '';
+  moreSheet.classList.add('show');
+}
+function hideMoreSheet() {
+  moreSheet.classList.remove('show');
+}
+function showHistorySheet() {
+  renderHistory();
+  historySheet.classList.add('show');
+}
+function hideHistorySheet() {
+  historySheet.classList.remove('show');
+}
+function renderHistory() {
+  const h = getHistory();
+  if (historyCount) historyCount.textContent = h.length ? '（' + h.length + '）' : '';
+  if (moreHistoryCount) moreHistoryCount.textContent = h.length ? '（' + h.length + '）' : '';
+  historyList.innerHTML = '';
+  if (!h.length) {
+    const li = document.createElement('li');
+    li.className = 'history-empty';
+    li.textContent = '还没有抽题记录';
+    historyList.appendChild(li);
+    return;
+  }
+  h.forEach(item => {
+    const li = document.createElement('li');
+    const d = new Date(item.ts);
+    const pad = n => String(n).padStart(2, '0');
+    const time = (d.getMonth() + 1) + '/' + d.getDate() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+    li.innerHTML = `
+      <span class="history-title">${escapeHtml(item.title)}</span>
+      <span class="history-meta"><span>${escapeHtml(item.bankName)}</span><span>${time}</span></span>
+    `;
+    li.onclick = async () => {
+      hideHistorySheet();
+      hideMoreSheet();
+      const bankId = item.bankId;
+      if (String(_currentBankId) !== String(bankId)) {
+        await selectBank(bankId, _banksCache);
+      }
+      const idx = questions.findIndex(q => String(q.id) === String(item.qid));
+      if (idx >= 0) {
+        showQuestion(idx, true);
+        setTimeout(() => qCard.scrollIntoView({ behavior: 'smooth', block: 'start' }), 120);
+      } else {
+        showToast('该题目已不在当前题库中');
+      }
+    };
+    historyList.appendChild(li);
+  });
+}
+moreBtn.onclick = showMoreSheet;
+moreClose.onclick = hideMoreSheet;
+moreMask.onclick = hideMoreSheet;
+historyRow.onclick = showHistorySheet;
+historyClose.onclick = hideHistorySheet;
+historyMask.onclick = hideHistorySheet;
+clearHistoryBtn.onclick = () => {
+  clearHistory();
+  renderHistory();
+};
+
+function showBankSheet() {
+  bankSheet.classList.add('show');
+  bankTrigger.classList.add('open');
+  bankOptions.querySelectorAll('li').forEach(li => {
+    const active = String(li.dataset.id) === String(_currentBankId);
+    li.classList.toggle('active', active);
+    li.querySelector('.opt-check').style.display = active ? 'flex' : 'none';
+  });
+}
+
+function hideBankSheet() {
+  bankSheet.classList.remove('show');
+  bankTrigger.classList.remove('open');
+}
+
+function updateBankTrigger(bank) {
+  if (!bank) return;
+  _currentBankId = bank.id;
+  // 触发按钮固定显示「选择题库」，当前题库名放到标题中
+  bankText.innerHTML = `
+    <span>选择题库</span>
+    <span class="bank-meta">${bank.questionCount} 题 · ${escapeHtml(bank.source || '考研复习题库')}</span>
+  `;
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
 }
 
 async function selectBank(bankId, banks) {
-  banks = banks || [];
+  banks = banks || _banksCache || [];
   try {
     const resp = await fetch(API_BASE + '/h5/wheel/questions?bankId=' + bankId);
     const json = await _parseBody(resp);
@@ -501,15 +1167,15 @@ async function selectBank(bankId, banks) {
     if (bank) {
       currentBankColor = bank.color || '#07C160';
       pageTitle.textContent = bank.name;
-      pageSub.textContent = bank.description || ('共 ' + N + ' 题');
-      footerText.textContent = (bank.source ? bank.source + ' · ' : '') + '数据来自题库接口 · v' + PAGE_VERSION.replace('wheel-v', '');
+      pageSub.textContent = bank.description || ('共 ' + N + ' 题 · 点击 GO 抽题');
+      footerText.textContent = '版本:v' + PAGE_VERSION.replace('wheel-v', '');
+      updateBankTrigger(bank);
+      // 题库切换统计
+      _track('wheel_bank_switch', { materialId: bank.id, materialTitle: bank.name });
     } else {
       pageSub.textContent = '共 ' + N + ' 题';
     }
-    const sel = document.getElementById('bankSelector');
-    if (sel) sel.value = bankId;
-    bankSelect.style.setProperty('--bank-color', currentBankColor);
-
+    bankTrigger.style.setProperty('--bank-color', currentBankColor);
     spinBtn.style.background = 'linear-gradient(135deg, ' + currentBankColor + ', ' + shadeColor(currentBankColor, -12) + ')';
     spinBtn.style.boxShadow = '0 4px 16px ' + hexToRgba(currentBankColor, 0.5);
     document.querySelector('.pointer').style.borderTopColor = currentBankColor;
@@ -518,6 +1184,7 @@ async function selectBank(bankId, banks) {
     emptyHint.style.display = 'none';
     qCard.classList.remove('show');
     drawWheel(0);
+    updateDrawnCount();
   } catch (e) {
     emptyText.textContent = '题目加载失败，请重试';
   }
@@ -567,13 +1234,30 @@ function drawWheel(rotation) {
 // ===== 旋转抽题 =====
 function spin() {
   if (isSpinning || N === 0) return;
+
+  // 不重复抽题：过滤已抽过的题，只从未抽池中选取
+  let targetIndex;
+  if (noRepeatSwitch.checked) {
+    const drawn = getDrawnSet(_currentBankId);
+    const pool = questions.filter(q => !drawn.has(String(q.id)));
+    if (pool.length === 0) {
+      showToast('本题库已抽完，点「重置本题库」再来一轮');
+      return;
+    }
+    const chosen = pool[Math.floor(Math.random() * pool.length)];
+    targetIndex = questions.indexOf(chosen);
+  } else {
+    targetIndex = Math.floor(Math.random() * N);
+  }
+
   isSpinning = true;
   spinBtn.classList.add('spinning');
   spinBtn.textContent = '...';
   qCard.classList.remove('show');
   emptyHint.style.display = 'none';
+  // 关闭吐司
+  thinkingTip.classList.remove('show');
 
-  const targetIndex = Math.floor(Math.random() * N);
   const targetAngle = -(targetIndex * segAngle + segAngle / 2);
   const extraSpins = 5 + Math.floor(Math.random() * 3);
   const finalRotation = currentRotation - (currentRotation % (Math.PI * 2)) + extraSpins * Math.PI * 2 + targetAngle;
@@ -598,6 +1282,16 @@ function spin() {
       spinBtn.classList.remove('spinning');
       spinBtn.textContent = 'GO';
       showQuestion(targetIndex);
+      // 抽题完成，记录时间戳用于短间隔判断
+      lastSpinFinishedAt = Date.now();
+      hasShownAnalysisForCurrent = false;
+      // 转动统计
+      const bank = _banksCache.find(b => String(b.id) === String(_currentBankId));
+      _track('wheel_spin', {
+        materialId: _currentBankId,
+        materialTitle: bank ? bank.name : '',
+        browserId: getBrowserId()
+      });
     }
   }
 
@@ -605,8 +1299,18 @@ function spin() {
 }
 
 // ===== 题目展示 =====
-function showQuestion(index) {
+function showQuestion(index, fromHistory) {
   const q = questions[index];
+  // 不重复模式：记录已抽题（按题库隔离）
+  if (noRepeatSwitch.checked && _currentBankId != null && q.id != null) {
+    addDrawn(_currentBankId, q.id);
+    updateDrawnCount();
+  }
+  // 抽题历史：仅「真实抽到」时记录，从历史点击重开不重复记
+  if (!fromHistory) {
+    const bank = _banksCache.find(b => String(b.id) === String(_currentBankId));
+    pushHistory(_currentBankId, bank ? bank.name : '', q.id, q.title);
+  }
   document.getElementById('qType').textContent = q.type || '问答题';
   document.getElementById('qScore').textContent = (q.score || 0) + '分';
   document.getElementById('qIndex').textContent = '第' + (index + 1) + '题 / 共' + N + '题';
@@ -626,11 +1330,35 @@ function showQuestion(index) {
 
 // ===== 事件 =====
 toggleBtn.addEventListener('click', () => {
-  const isOpen = analysisBox.classList.toggle('show');
+  const willOpen = !analysisBox.classList.contains('show');
+  // 关闭吐司
+  thinkingTip.classList.remove('show');
+
+  // 短间隔「思考一下」提示：距离上次抽题完成 < 3 秒且打开解析 且 本题还没提示过
+  if (willOpen && lastSpinFinishedAt > 0 && !hasShownAnalysisForCurrent) {
+    const elapsed = Date.now() - lastSpinFinishedAt;
+    if (elapsed < THINK_TIP_THRESHOLD) {
+      thinkingTip.classList.add('show');
+      setTimeout(() => thinkingTip.classList.remove('show'), 1600);
+      hasShownAnalysisForCurrent = true;
+      // 仍然允许本次打开解析（不阻断），下次提示基于重新 spin
+    }
+  }
+
+  const isOpen = analysisBox.classList.toggle('show', willOpen);
   toggleBtn.classList.toggle('open', isOpen);
   toggleBtn.innerHTML = isOpen
     ? '收起解析 <span class="arrow">▾</span>'
     : '查看解析 <span class="arrow">▾</span>';
+
+  // 解析查看统计：每次从收起→打开算一次（多次开合同题仍算）
+  if (isOpen) {
+    const bank = _banksCache.find(b => String(b.id) === String(_currentBankId));
+    _track('wheel_view_analysis', {
+      materialId: _currentBankId,
+      materialTitle: bank ? bank.name : ''
+    });
+  }
 });
 
 againBtn.addEventListener('click', spin);
@@ -656,7 +1384,18 @@ function hexToRgba(hex, alpha) {
 }
 
 // ===== 启动 =====
-footerText.textContent = 'v' + PAGE_VERSION.replace('wheel-v', '');
+// 不重复抽题开关：状态持久化，刷新后保持
+noRepeatSwitch.checked = localStorage.getItem(NO_REPEAT_KEY) === '1';
+noRepeatSwitch.addEventListener('change', () => {
+  localStorage.setItem(NO_REPEAT_KEY, noRepeatSwitch.checked ? '1' : '0');
+  updateDrawnCount();
+});
+resetDrawnBtn.addEventListener('click', () => {
+  if (_currentBankId == null) { showToast('请先选择题库'); return; }
+  clearDrawn(_currentBankId);
+  updateDrawnCount();
+  showToast('已重置本题库抽题记录');
+});
 loadBanks();
 </script>
 
